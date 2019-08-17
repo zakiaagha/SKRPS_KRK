@@ -22,7 +22,7 @@ class Login
             $_SESSION['user_full_name'] = $user['user_full_name'];
             $_SESSION['idm_user'] = $user['idm_user'];
             $_SESSION['user_name'] = $user['user_name'];
-            $_SESSION['level_id'] = $user['rd_level_id'];
+            $_SESSION['role_id'] = $user['rd_role_id'];
             return $user['user_full_name'];
         }
         return false;

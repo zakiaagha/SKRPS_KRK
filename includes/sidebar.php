@@ -1,7 +1,7 @@
   <!-- Left side column. contains the logo and sidebar -->
 
   <?php
-  if ($_SESSION['level_id'] == 1) {?>
+  if ($_SESSION['role_id'] == 1) {?>
     <aside class="main-sidebar">
       <!-- sidebar: style can be found in sidebar.less -->
       <section class="sidebar">
@@ -80,7 +80,7 @@
       </section>
       <!-- /.sidebar -->
     </aside>
-  <?php } elseif ($_SESSION['level_id'] == 2) { ?>
+  <?php } elseif ($_SESSION['role_id'] == 2) { ?>
     <aside class="main-sidebar">
       <!-- sidebar: style can be found in sidebar.less -->
       <section class="sidebar">
@@ -148,7 +148,7 @@
       </section>
       <!-- /.sidebar -->
     </aside>
-  <?php } elseif ($_SESSION['level_id'] == 3) { ?>
+  <?php } elseif ($_SESSION['role_id'] == 3) { ?>
     <aside class="main-sidebar">
       <!-- sidebar: style can be found in sidebar.less -->
       <section class="sidebar">
