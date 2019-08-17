@@ -8,19 +8,13 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
           <li class="header">MAIN NAVIGATION</li>
-          <li class="active treeview">
-            <a href="#">
+          <li class="active">
+            <a href="?m=krk_usr">
               <i class="fa fa-database"></i> <span>Master</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
             </a>
-            <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> User</a></li>
-            </ul>
           </li>
           <li class="treeview">
-            <a href="#">
+            <a href="">
               <i class="fa fa-exchange"></i>
               <span>Transaction</span>
               <span class="pull-right-container">
