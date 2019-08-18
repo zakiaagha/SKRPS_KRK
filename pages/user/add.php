@@ -1,3 +1,21 @@
+<?php
+include_once './includes/user.inc.php';
+$user = new User($db);
+if($_POST){
+    $user->user_name=$_POST['user_name'];
+    $user->user_full_name=$_POST['user_full_name'];
+    $user->user_nip=$_POST['user_nip'];
+    $user->user_email=$_POST['user_email'];
+    $user->user_password=$_POST['user_password'];
+    $user->user_address=$_POST['user_address'];
+    $user->user_telpon=$_POST['user_telpon'];
+    $user->user_role=$_POST['user_role'];
+    
+    $user->insert();
+    var_dump($user);
+}
+
+?>
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -19,7 +37,10 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
+
             <form role="form" acntion="?" id="user_form">
+            <form  id="user" name="user" method="POST" action="index.php?m=krk_add_usr">
+
               <div class="box-body">
                <div class="col-md-4">
                <div class="form-group">
@@ -28,7 +49,7 @@
                 </div>
                 <div class="form-group">
                   <label for="namaPengguna">Nama Pengguna</label>
-                  <input type="username" class="form-control" id="user_name" name=user_name placeholder="Nama Pengguna">
+                  <input type="username" class="form-control" id="user_name" name="user_name" placeholder="Nama Pengguna">
                 </div>
                 <div class="form-group">
                   <label for="nip">NIP</label>
@@ -53,7 +74,7 @@
                 <!-- select -->
                 <div class="form-group">
                   <label>Role</label>
-                  <select class="form-control">
+                  <select class="form-control" id="user_role" name"user_role">
                     <option value="1">Admin</option>
                     <option value="2">Surveiyor</option>
                     <option value="3">Oprator</option>
@@ -75,6 +96,7 @@
     </section>
     <!-- /.content -->
   </div>
+<<<<<<< HEAD
   <script type="text/javascript">
     $(document).ready(function() {
        $("#user_form").submit(function(e){
@@ -85,5 +107,7 @@
       });
     })
   </script>
+=======
+>>>>>>> ede5748d14018cde667734811e76780ef6b72a8d
 
 
