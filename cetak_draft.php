@@ -1,5 +1,4 @@
 <?php
-include_once 'header.php';
 if($_POST){
 	
 	include_once 'includes/pemohon.inc.php';
@@ -28,29 +27,15 @@ if($_POST){
 	$eks->inform = $_POST['inform'];
 	$eks->bln = date('m');
 	$eks->year = date('Y');
-	
-	if($eks->insert()){
-?>
-<div class="alert alert-success alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Berhasil Tambah Data!</strong> Tambah lagi atau <a href="index.php">lihat semua data</a>.
-</div>
-<?php
-	}
-	
-	else{
-?>
-<div class="alert alert-danger alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Gagal Tambah Data!</strong> Terjadi kesalahan, coba sekali lagi.
-</div>
-<?php
-	}
 }
 ?>
 
   <main id="main">
-
+    <section id="call-to-action">
+      <div class="container">
+        <h3 style="color: #fff;">Cetak Draft KRK</h3>
+      </div>
+    </section>
     <!--==========================
       About Section
     ============================-->

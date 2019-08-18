@@ -12,38 +12,30 @@ if($_POST){
 	$eks->app_owner_address= $_POST['app_owner_address'];
 	
 	if($eks->insert()){
-?>
-<div class="alert alert-success alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Berhasil Tambah Data!</strong> Tambah lagi atau <a href="index.php">lihat semua data</a>.
-</div>
-<?php
-	}
-	
-	else{
-?>
-<div class="alert alert-danger alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Gagal Tambah Data!</strong> Terjadi kesalahan, coba sekali lagi.
-</div>
-<?php
+      $_SESSION["errorType"] = "success";
+      $_SESSION["errorMsg"] = "Permohonan Baru Berhasil.";
+	} else {
+      $_SESSION["errorType"] = "gagal";
+      $_SESSION["errorMsg"] = "Permohonan Baru gagal.";
 	}
 }
 ?>
 
   <main id="main">
-    <section id="call-to-action" class="wow fadeInUp">
+    <section id="call-to-action">
       <div class="container">
         <h3 style="color: #fff;">Permohonan Baru</h3>
       </div>
     </section>
-
-
+	
     <!--==========================
       About Section
     ============================-->
     <section id="about" class="wow fadeInUp">
       <div class="container">
+      	<?php if ($_SESSION["errorMsg"] <> "") { ?>
+        <div class="alert alert-<?php echo $_SESSION["errorType"] ?> alert-dismissable"><?php echo $_SESSION["errorMsg"]; ?></div>
+    	<?php } ?><br>
         <div class="row">
 		  <div class="col-xs-12 col-sm-6 col-md-6">	
           <form action="index.php?hal=permohonan_baru" method="post">	
@@ -56,35 +48,51 @@ if($_POST){
 				<textarea type="text" class="form-control" id="app_address" name="app_address" required></textarea>	    
 			</div>
 			<div class="form-group">
-				<label for="jm">Nama Pemilik Lahan</label>				    
-				<input type="text" class="form-control" id="app_owner_name" name="app_owner_name" required>
-			</div>
-			<div class="form-group">
-				<label for="jm">Alamat Lokasi</label>				    
-				<textarea type="text" class="form-control" id="app_owner_address" name="app_owner_address" required></textarea>	    
-			</div>
-			<div class="form-group">
 				<label for="jm">NIK</label>				    
 				<input type="text" class="form-control" id="app_nik" name="app_nik" required>
 			</div>
 			<div class="form-group">
-				<label for="jm">No PL</label>				    
-				<input type="text" class="form-control" id="no_pl" name="no_pl" required>
-			</div>	  
+                <label>Tanggal</label>
+                <input type="text" class="form-control" id="app_date" name="app_date" value="<?php echo date("Y-m-d");?>" readonly>    
+            </div>
 			<div class="form-group">
-				<label for="jm">No Sertifikat</label>				    
+				<label for="jm">Nama Pemilik Lahan</label>				    
+				<input type="text" class="form-control" id="app_owner_name" name="app_owner_name" required>
+			</div>
+			<div class="form-group">
+				<label for="jm">Alamat Lokasi</label>	    
+				<textarea type="text" class="form-control" id="app_owner_address" name="app_owner_address" required></textarea>	    
+			</div>  
+			<div class="form-group">
+				<label for="jm">No Sertifikat</label>	    
 				<input type="text" class="form-control" id="no_sertifikat" name="no_sertifikat" required>
 			</div>	  
 			<div class="form-group">
-				<label for="jm">Luas Lahan</label>				    
+				<label for="jm">No PL</label>
+				<input type="text" class="form-control" id="no_pl" name="no_pl" required>
+			</div>	
+			<div class="form-group">
+				<label for="jm">Luas Lahan</label>
+				<input type="text" class="form-control" id="luas_lahan" name="luas_lahan" required>
+			</div>	 
+			<div class="form-group">
+				<label for="jm">Luas Lahan Pemohonan</label>
 				<input type="text" class="form-control" id="luas_lahan" name="luas_lahan" required>
 			</div>	  
 			<div class="form-group">
-				<label for="jm">Peruntukan Lahan</label>				    
+				<label for="jm">Peruntukan Lahan Perpres 87/2011</label>    
 				<input type="text" class="form-control" id="peruntukan_lahan" name="peruntukan_lahan" required>
 			</div>	  	  
 			<div class="form-group">
-				<label for="jm">Peruntukan Bangunan</label>				    
+				<label for="jm">Peruntukan Lahan Prov. Kepri 1/2017</label>    
+				<input type="text" class="form-control" id="peruntukan_lahan" name="peruntukan_lahan" required>
+			</div>	  	  
+			<div class="form-group">
+				<label for="jm">Peruntukan Bangunan</label>    
+				<input type="text" class="form-control" id="peruntukan_lahan" name="peruntukan_lahan" required>
+			</div>	  	  
+			<div class="form-group">
+				<label for="jm">No. IMB Lama</label>  
 				<input type="text" class="form-control" id="peruntukan_bangunan" name="peruntukan_bangunan" required>
 			</div>	
 			<div class="form-group">
@@ -197,6 +205,13 @@ if($_POST){
     </section><!-- #contact -->
 
   </main>
+	<script type="text/javascript">
 		
-		<?php
-?>
+    $(document).ready(function() {
+    	 $('#app_date').datepicker({
+          todayHighlight: true,
+          autoclose: true,
+          format: 'yyyy-mm-dd'
+        })
+    });
+	</script>
