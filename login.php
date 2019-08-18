@@ -18,8 +18,8 @@ if($_POST){
 		if($login->login()){
       $_SESSION["errorType"] = "success";
       $_SESSION["errorMsg"] = "You have successfully logged in.";
-      echo "<script type='text/javascript'>alert('".$_SESSION['role_id']."');</script>";
-      header('location:index.php');
+      // echo "<script type='text/javascript' >alert('".$_SESSION['role_id']."')</script>";
+       header('location:index.php');
 		} else {
 			$_SESSION["errorType"] = "danger";
       $_SESSION["errorMsg"] = "wrong username or password";

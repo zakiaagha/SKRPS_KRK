@@ -11,6 +11,11 @@ include_once 'includes/login.inc.php';
       <h1>
         Pengguna
       </h1>
+      <?php  {?> 
+                <div class="pull-right">
+                <a href = "?m=krk_add_usr" ><button type="button" class="btn btn-primary" id="add_user"><i class="fa fa-plus"></i>&emsp;Tambah Pengguna</button></a>
+                </div>
+                <?php } ?>
     </section>
 
     <!-- Main content -->

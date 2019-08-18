@@ -5,6 +5,8 @@ include_once 'includes/sidebar.php';
 $menu = $_GET['m'];
 if ($menu == 'krk_usr') {
   include "pages/user/list.php";
+} elseif ($menu == 'krk_add_usr') {
+  include "pages/user/add.php";
 } elseif ($menu == 'krk_data') {
   include "pages/data/list.php";
 } else {
