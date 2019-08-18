@@ -19,7 +19,7 @@ class User{
 	}
 	
 	function insert(){
-		$query = "insert into ".$this->table_name." values('',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		$query = "insert into ".$this->table_name." (user_name, user_full_name, user_password, user_email, user_nip, user_address, user_telpon) values(?,?,?,?,?,?,?)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->user_name);
 		$stmt->bindParam(2, $this->user_full_name);
@@ -28,7 +28,6 @@ class User{
 		$stmt->bindParam(5, $this->user_nip);
 		$stmt->bindParam(6, $this->user_address);
         $stmt->bindParam(7, $this->user_telpon);
-        $stmt->bindParam(8, $this->user_role);
 		if($stmt->execute()){
 			return true;
 		}else{
