@@ -12,7 +12,6 @@ if($_POST){
     $user->user_role=$_POST['user_role'];
     
     $user->insert();
-    var_dump($user);
 }
 
 ?>
@@ -71,7 +70,7 @@ if($_POST){
                 <!-- select -->
                 <div class="form-group">
                   <label>Role</label>
-                  <select class="form-control" id="user_role" name"user_role">
+                  <select class="form-control" id="rd_role_id" name"rd_role_id">
                     <option value="1">Admin</option>
                     <option value="2">Surveiyor</option>
                     <option value="3">Oprator</option>
