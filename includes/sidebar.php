@@ -17,7 +17,7 @@
           <li>
             <a href="?m=krk_data">
               <i class="fa fa-database"></i>
-              <span>Transaction</span>
+              <span>Data KRK</span>
             </a>
           </li>
           <li>
@@ -37,62 +37,17 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
           <li class="header">MAIN NAVIGATION</li>
-          <li class="treeview">
-            <a href="#">
-              <i class="fa fa-exchange"></i>
-              <span>Transaction</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
+          <li>
+            <a href="?m=krk_data">
+              <i class="fa fa-database"></i>
+              <span>Data KRK</span>
             </a>
-            <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-            </ul>
           </li>
-          <li class="treeview">
-            <a href="#">
+          <li>
+            <a href="?m=krk_laporan">
               <i class="fa fa-pie-chart"></i>
-              <span>Report</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
+              <span>Laporan</span>
             </a>
-            <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-            </ul>
-          </li>
-          <li class="treeview">
-            <a href="#">
-              <i class="fa fa-gears"></i> <span>Setting</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-            </a>
-            <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-              <li class="treeview">
-                <a href="#"><i class="fa fa-circle-o"></i> Sub Menu
-                  <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </span>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-                  <li class="treeview">
-                    <a href="#"><i class="fa fa-circle-o"></i> Sub Menu
-                      <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                    </a>
-                    <ul class="treeview-menu">
-                      <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-                      <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-            </ul>
           </li>
         </ul>
       </section>
@@ -105,110 +60,14 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
           <li class="header">MAIN NAVIGATION</li>
-            <li class="treeview">
-            <a href="#">
-              <i class="fa fa-exchange"></i>
-              <span>Transaction</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
+          <li>
+            <a href="?m=krk_data">
+              <i class="fa fa-database"></i>
+              <span>Data KRK</span>
             </a>
-            <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-            </ul>
-          </li>
-          <li class="treeview">
-            <a href="#">
-              <i class="fa fa-gears"></i> <span>Setting</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-            </a>
-            <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-              <li class="treeview">
-                <a href="#"><i class="fa fa-circle-o"></i> Sub Menu
-                  <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </span>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-                  <li class="treeview">
-                    <a href="#"><i class="fa fa-circle-o"></i> Sub Menu
-                      <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                    </a>
-                    <ul class="treeview-menu">
-                      <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-                      <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-            </ul>
           </li>
         </ul>
       </section>
       <!-- /.sidebar -->
     </aside>
-  <?php } else { ?>
-    <aside class="main-sidebar">
-      <!-- sidebar: style can be found in sidebar.less -->
-      <section class="sidebar">
-        <!-- sidebar menu: : style can be found in sidebar.less -->
-        <ul class="sidebar-menu" data-widget="tree">
-          <li class="header">MAIN NAVIGATION</li>
-          <li class="treeview">
-            <a href="#">
-              <i class="fa fa-exchange"></i>
-              <span>Transaction</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-            </a>
-            <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-            </ul>
-          </li>
-          <li class="treeview">
-            <a href="#">
-              <i class="fa fa-gears"></i> <span>Setting</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-            </a>
-            <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-              <li class="treeview">
-                <a href="#"><i class="fa fa-circle-o"></i> Sub Menu
-                  <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </span>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-                  <li class="treeview">
-                    <a href="#"><i class="fa fa-circle-o"></i> Sub Menu
-                      <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                    </a>
-                    <ul class="treeview-menu">
-                      <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-                      <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Sub Menu</a></li>
-            </ul>
-          </li>
-        </ul>
-      </section>
-      <!-- /.sidebar -->
-    </aside>
-  <?php } ?>
-  
+  <?php }?>

@@ -24,7 +24,7 @@ include_once 'includes/login.inc.php';
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="data-user" class="table table-bordered table-hover">
+              <table id="data" class="table table-bordered table-hover">
                 <thead>
                 <tr>
                   <th width="5%">No</th>
@@ -50,15 +50,6 @@ include_once 'includes/login.inc.php';
                 <?php
                 }?>
                 </tbody>
-                <tfoot>
-                <tr>
-                  <th>Rendering engine</th>
-                  <th>Browser</th>
-                  <th>Platform(s)</th>
-                  <th>Engine version</th>
-                  <th>CSS grade</th>
-                </tr>
-                </tfoot>
               </table>
             </div>
             <!-- /.box-body -->
@@ -70,5 +61,3 @@ include_once 'includes/login.inc.php';
     </section>
     <!-- /.content -->
   </div>
-
-
