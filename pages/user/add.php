@@ -36,11 +36,8 @@ if($_POST){
               <h3 class="box-title">Quick Example</h3>
             </div>
             <!-- /.box-header -->
-            <!-- form start -->
 
-            <form role="form" acntion="?" id="user_form">
             <form  id="user" name="user" method="POST" action="index.php?m=krk_add_usr">
-
               <div class="box-body">
                <div class="col-md-4">
                <div class="form-group">
@@ -96,18 +93,4 @@ if($_POST){
     </section>
     <!-- /.content -->
   </div>
-<<<<<<< HEAD
-  <script type="text/javascript">
-    $(document).ready(function() {
-       $("#user_form").submit(function(e){
-      e.preventDefault();
-      
-          var inputs = $(this).serialize();
-          alert(inputs)
-      });
-    })
-  </script>
-=======
->>>>>>> ede5748d14018cde667734811e76780ef6b72a8d
-
 

@@ -1,5 +1,5 @@
 <?php
-include 'includes/user.inc.php';
+include_once 'includes/user.inc.php';
 $user = new User($db);
 
 $user->user_name=$_POST['user_name'];
