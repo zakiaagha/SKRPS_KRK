@@ -19,7 +19,7 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form role="form" method="post" id="user">
+            <form role="form" acntion="?" id="user_form">
               <div class="box-body">
                <div class="col-md-4">
                <div class="form-group">
@@ -76,15 +76,14 @@
     <!-- /.content -->
   </div>
   <script type="text/javascript">
-  
-  $(document).ready(function() {
-        $('#user').submit(function(e){
-        var inputs = $(this).serialize();
-        alert(inputs);
-       
-          
+    $(document).ready(function() {
+       $("#user_form").submit(function(e){
+      e.preventDefault();
+      
+          var inputs = $(this).serialize();
+          alert(inputs)
       });
-  });
+    })
   </script>
 
 
