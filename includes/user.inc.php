@@ -2,7 +2,8 @@
 class User{
 	
 	private $conn;
-	private $table_name = "krk_users";
+    private $table_name = "krk_users";
+    private $table_role = "krk_role_detail";
 	
 	public $id;
 	public $user_name;
@@ -12,13 +13,15 @@ class User{
 	public $user_nip;
 	public $user_address;
     public $user_telpon;
-    public $user_role;	
+    public $rd_role_id;
+    public $rd_user_id;	
 	
 	public function __construct($db){
 		$this->conn = $db;
 	}
 	
 	function insert(){
+
 		$query = "insert into ".$this->table_name." (user_name, user_full_name, user_password, user_email, user_nip, user_address, user_telpon) values(?,?,?,?,?,?,?)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->user_name);
@@ -32,7 +35,20 @@ class User{
 			return true;
 		}else{
 			return false;
-		}
+        }
+        
+        $rd_user_id = $db->lastInsertId();
+        
+        $query_role = "insert into ".$this->table_role." (rd_user_id, rd_role_id) values(?,?)";
+        $obj = $this->conn->prepare($query_role);
+		$obj->bindParam(1, $this->rd_user_id);
+        $obj->bindParam(2, $this->rd_role_id);
+        if($obj->execute()){
+			return true;
+		}else{
+			return false;
+        }
+
 		
 	}
 	
@@ -89,7 +105,8 @@ class User{
 		$stmt->execute();
 
 		return $stmt;
-	}
+    }
+    
 	
 }
 ?>
