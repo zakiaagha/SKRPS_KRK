@@ -44,6 +44,17 @@ class Login
         return false;
     }
 
+    function readAll(){
+
+        $query = 'SELECT * FROM '.$this->table_name.' 
+                  LEFT JOIN '.$this->table_level.' ON rd_user_id=idm_user
+                  LEFT JOIN krk_roles ON idm_role=rd_role_id';
+        $stmt = $this->conn->prepare( $query );
+        $stmt->execute();
+        
+        return $stmt;
+    }
+
     public function getUser()
     {
         return $this->user;
