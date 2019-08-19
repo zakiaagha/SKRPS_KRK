@@ -13,8 +13,10 @@ class User{
 	public $user_nip;
 	public $user_address;
     public $user_telpon;
-    public $rd_role_id;
+    public $user_role;
     public $rd_user_id;	
+    public $datenow;
+    public $uid;
 	
 	public function __construct($db){
 		$this->conn = $db;
@@ -22,7 +24,7 @@ class User{
 	
 	function insert(){
 
-		$query = "insert into ".$this->table_name." (user_name, user_full_name, user_password, user_email, user_nip, user_address, user_telpon) values(?,?,?,?,?,?,?)";
+		$query = "insert into ".$this->table_name." (user_name, user_full_name, user_password, user_email, user_nip, user_address, user_telpon, user_cr_uid, user_cr_dt) values(?,?,?,?,?,?,?,?,?)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->user_name);
 		$stmt->bindParam(2, $this->user_full_name);
@@ -31,37 +33,31 @@ class User{
 		$stmt->bindParam(5, $this->user_nip);
 		$stmt->bindParam(6, $this->user_address);
         $stmt->bindParam(7, $this->user_telpon);
+        $stmt->bindParam(8, $this->uid);
+        $stmt->bindParam(9, $this->datenow);
+		if($stmt->execute()){
+			$this->rd_user_id = $this->conn->lastInsertId();
+        	$this->insertRole();
+			return true;
+		}else{
+			return false;
+        }
+		
+	}
+	
+	
+	function insertRole(){
+		$query = "insert into krk_role_detail (rd_user_id, rd_role_id) VALUES(?,?)";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(1, $this->rd_user_id);
+		$stmt->bindParam(2, $this->user_role);
 		if($stmt->execute()){
 			return true;
 		}else{
 			return false;
-        }
-        
-        $rd_user_id = $db->lastInsertId();
-        
-        $query_role = "insert into ".$this->table_role." (rd_user_id, rd_role_id) values(?,?)";
-        $obj = $this->conn->prepare($query_role);
-		$obj->bindParam(1, $this->rd_user_id);
-        $obj->bindParam(2, $this->rd_role_id);
-        if($obj->execute()){
-			return true;
-		}else{
-			return false;
-        }
-
-		
+        }		
 	}
-	
-	function readAll(){
 
-		$query = "SELECT * FROM ".$this->table_name." ORDER BY id_data ASC";
-		$stmt = $this->conn->prepare( $query );
-		$stmt->execute();
-		
-		return $stmt;
-	}
-	
-	// used when filling up the update product form
 	function readOne(){
 		
 		$query = "SELECT * FROM " . $this->table_name . " WHERE id_data=? LIMIT 0,1";

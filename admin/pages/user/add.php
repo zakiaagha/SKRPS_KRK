@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
 include_once './includes/user.inc.php';
 $user = new User($db);
 if($_POST){
@@ -10,8 +12,18 @@ if($_POST){
     $user->user_address=$_POST['user_address'];
     $user->user_telpon=$_POST['user_telpon'];
     $user->user_role=$_POST['user_role'];
+    $user->uid=$_SESSION['user_name'];
+    $user->datenow=date("Y-m-d H:i:s");  
     
-    $user->insert();
+    if($user->insert()){
+      $_SESSION["errorType"] = "success";
+      $_SESSION["errorMsg"] = "You have successfully logged in.";
+      // echo "<script type='text/javascript' >alert('".$_SESSION['role_id']."')</script>";
+       header('location:index.php?m=krk_usr');
+    } else {
+      $_SESSION["errorType"] = "danger";
+      $_SESSION["errorMsg"] = "wrong username or password";
+    }
 }
 
 ?>
@@ -70,10 +82,10 @@ if($_POST){
                 <!-- select -->
                 <div class="form-group">
                   <label>Role</label>
-                  <select class="form-control" id="rd_role_id" name"rd_role_id">
+                  <select class="form-control" id="user_role" name="user_role">
                     <option value="1">Admin</option>
-                    <option value="2">Surveiyor</option>
-                    <option value="3">Oprator</option>
+                    <option value="2">Operator</option>
+                    <option value="3">surveyor</option>
                   </select>
                 </div>
                 </div>

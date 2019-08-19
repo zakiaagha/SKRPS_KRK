@@ -11,11 +11,6 @@ include_once 'includes/login.inc.php';
       <h1>
         Pengguna
       </h1>
-      <?php  {?> 
-                <div class="pull-right">
-                <a href = "?m=krk_add_usr" ><button type="button" class="btn btn-primary" id="add_user"><i class="fa fa-plus"></i>&emsp;Tambah Pengguna</button></a>
-                </div>
-                <?php } ?>
     </section>
 
     <!-- Main content -->
@@ -25,7 +20,10 @@ include_once 'includes/login.inc.php';
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Daftar Pengguna</h3>
+              <h3 class="box-title">Daftar Pengguna</h3>     
+              <div class="pull-right">
+                <a href = "?m=krk_add_usr" ><button type="button" class="btn btn-primary" id="add_user"><i class="fa fa-plus"></i>&emsp;Tambah Pengguna</button></a>
+              </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
