@@ -1,8 +1,9 @@
 <?php
 include_once 'includes/login.inc.php';
 
+
   $user = new Login($db);
-  
+
   $stmt=$user->readAll();
   ?>
   <div class="content-wrapper">
@@ -20,7 +21,9 @@ include_once 'includes/login.inc.php';
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Daftar Pengguna</h3>     
+              <h3 class="box-title">Daftar Pengguna <?php if ($_SESSION["userMsg"] <> "") {
+  echo 'dddd';
+}?></h3>     
               <div class="pull-right">
                 <a href = "?m=krk_add_usr" ><button type="button" class="btn btn-primary" id="add_user"><i class="fa fa-plus"></i>&emsp;Tambah Pengguna</button></a>
               </div>

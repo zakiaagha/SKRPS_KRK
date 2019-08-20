@@ -15,12 +15,12 @@ if($_POST){
     
     if($user->insert()){
       $_SESSION["errorType"] = "success";
-      $_SESSION["errorMsg"] = "You have successfully logged in.";
+      $_SESSION["errorMsg"] = "Penambahan pengguna berhasil";
       // echo "<script type='text/javascript' >alert('".$_SESSION['role_id']."')</script>";
        header('location:index.php?m=krk_usr');
     } else {
       $_SESSION["errorType"] = "danger";
-      $_SESSION["errorMsg"] = "wrong username or password";
+      $_SESSION["errorMsg"] = "Penambahan pengguna gagal";
     }
 }
 

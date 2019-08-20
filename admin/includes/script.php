@@ -19,7 +19,9 @@
 <!-- jQuery Knob Chart -->
 <script src="bower_components/jquery-knob/dist/jquery.knob.min.js"></script>
 <!-- daterangepicker -->
-<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/moment/min/moment.min.js"></script>  
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js"></script>
+
 <script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 <!-- datepicker -->
 <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
@@ -45,6 +47,14 @@
 <script src="bower_components/fastclick/lib/fastclick.js"></script>
 
 <script>
+  var errorType = "<?php echo $_SESSION['errorType'];?>";
+  var errorMsg = "<?php echo $_SESSION['errorMsg'];?>";
+  if (user_msg.length > 20) {
+    $.bootstrapGrowl(errorMsg,{
+      type: errorType,
+      delay: 2000,
+    });
+  }
   $(function () {
     $('#data').DataTable({
       'paging'      : true,
