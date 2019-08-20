@@ -7,6 +7,8 @@ if ($menu == 'krk_usr') {
   include "pages/user/list.php";
 } elseif ($menu == 'krk_add_usr') {
   include "pages/user/add.php";
+} elseif ($menu == 'krk_edit_usr') {
+  include "pages/user/update.php";
 } elseif ($menu == 'krk_data') {
   include "pages/data/list.php";
 } else {

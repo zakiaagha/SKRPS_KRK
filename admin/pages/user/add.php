@@ -1,6 +1,4 @@
 <?php
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
 include_once './includes/user.inc.php';
 $user = new User($db);
 if($_POST){
@@ -31,8 +29,8 @@ if($_POST){
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Tambah Pengguna
-        <small>Preview</small>
+        Pengguna
+        <small>Tambah</small>
       </h1>
     </section>
 
@@ -44,7 +42,7 @@ if($_POST){
           <!-- general form elements -->
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">Quick Example</h3>
+              <h3 class="box-title">Form Tambah Pengguna</h3>
             </div>
             <!-- /.box-header -->
 

@@ -2,7 +2,7 @@
 include_once 'includes/login.inc.php';
 
   $user = new Login($db);
-
+  
   $stmt=$user->readAll();
   ?>
   <div class="content-wrapper">
@@ -34,7 +34,7 @@ include_once 'includes/login.inc.php';
                   <th>Username</th>
                   <th>NIP</th>
                   <th>Level</th>
-                  <th>Action</th>
+                  <th width="13%">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,7 +48,10 @@ include_once 'includes/login.inc.php';
                   <td><?php echo $row['user_name']; ?></td>
                   <td><?php echo $row['user_nip']; ?></td>
                   <td><?php echo $row['role_name']; ?></td>
-                  <td>X</td>
+                  <td>
+                    <a href="?m=krk_edit_usr&uid=<?php echo md5($row['idm_user'])?>" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>&nbsp;
+                    <a href="?m=krk_del_usr" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                  </td>
                 </tr>
                 <?php
                 }?>

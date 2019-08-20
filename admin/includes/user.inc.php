@@ -60,41 +60,27 @@ class User{
 
 	function readOne(){
 		
-		$query = "SELECT * FROM " . $this->table_name . " WHERE id_data=? LIMIT 0,1";
+		$query = "SELECT * FROM " . $this->table_name . " WHERE idm_user=? LIMIT 0,1";
 
-		$stmt = $this->conn->prepare( $query );
+		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->id);
 		$stmt->execute();
 
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		
-		$this->id = $row['id_data'];
-		$this->nama_pemohon = $row['nama_pemohon'];
-		$this->alamat_pemohon = $row['alamat_pemohon'];
-		$this->bln = $row['bulan'];
-		$this->year = $row['tahun'];
-		$this->nama_pemilik = $row['pemilik_tanah'];
-		$this->alamat_lokasi = $row['alamat_lokasi'];
-		$this->no_pl = $row['no_pl'];
-		$this->no_sertifikat = $row['no_sertifikat'];
-		$this->luas_lahan = $row['luas_lahan'];
-		$this->peruntukan_lahan = $row['peruntukan_lahan'];
-		$this->peruntukan_bangunan = $row['peruntukan_bangunan'];
-		$this->ketinggian_maksimum = $row['ketinggian_mak'];
-		$this->jumlah_lantai = $row['jml_lantai'];
-		$this->gsbdm = $row['gsbdm'];
-		$this->gsbskn = $row['gsbskn'];
-		$this->gsbskr = $row['gsbskr'];
-		$this->gsbblk = $row['gsbblk'];
-		$this->kdb = $row['kdb'];
-		$this->klb = $row['klb'];
-		$this->kdh = $row['kdh'];
-		$this->ktb = $row['ktb'];
-		$this->utilitas = $row['jaringan_utilitas'];
-		$this->inform = $row['inform_lainnya'];
+		$this->id = $row['idm_user'];
+		$this->user_name = $row['user_name'];
+		$this->user_full_name = $row['user_full_name'];
+		$this->user_password = $row['user_password'];
+		$this->user_email = $row['user_email'];
+		$this->user_nip = $row['user_nip'];
+		$this->user_address = $row['user_address'];
+	    $this->user_telpon = $row['user_telpon'];/*
+	    $this->user_role = $row['rd_role_id'];*/
 	}
+
 	function deleteOne(){
-		$query = "DELETE FROM " . $this->table_name . " WHERE id_data=?";
+		$query = "DELETE FROM " . $this->table_name . " WHERE idm_user=?";
 
 		$stmt = $this->conn->prepare( $query );
 		$stmt->bindParam(1, $this->id);
