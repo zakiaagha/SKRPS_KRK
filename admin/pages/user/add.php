@@ -63,7 +63,7 @@ if($_POST){
                 </div>
                 <div class="form-group">
                   <label for="alamat">Alamat</label>
-                  <input type="alamat" class="form-control" id="user_address" name="user_address" placeholder="Alamat">
+                  <textarea type="text" class="form-control" id="user_address" name="user_address" required></textarea>  
                 </div>
                 <div class="form-group">
                   <label for="nomertelpon">Nomer Telpon</label>

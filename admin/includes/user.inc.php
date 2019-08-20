@@ -60,8 +60,7 @@ class User{
 
 	function readOne(){
 		
-		$query = "SELECT * FROM " . $this->table_name . " WHERE idm_user=? LIMIT 0,1";
-
+		$query = "SELECT * FROM ".$this->table_name." LEFT JOIN ".$this->table_role." ON rd_user_id=idm_user LEFT JOIN krk_roles ON idm_role=rd_role_id WHERE md5(idm_user)=? LIMIT 0,1";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->id);
 		$stmt->execute();
@@ -75,8 +74,8 @@ class User{
 		$this->user_email = $row['user_email'];
 		$this->user_nip = $row['user_nip'];
 		$this->user_address = $row['user_address'];
-	    $this->user_telpon = $row['user_telpon'];/*
-	    $this->user_role = $row['rd_role_id'];*/
+	    $this->user_telpon = $row['user_telpon'];
+	    $this->user_role = $row['rd_role_id'];
 	}
 
 	function deleteOne(){
