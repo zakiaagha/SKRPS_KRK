@@ -47,14 +47,6 @@
 <script src="bower_components/fastclick/lib/fastclick.js"></script>
 
 <script>
-  var errorType = "<?php echo $_SESSION['errorType'];?>";
-  var errorMsg = "<?php echo $_SESSION['errorMsg'];?>";
-  if (user_msg.length > 20) {
-    $.bootstrapGrowl(errorMsg,{
-      type: errorType,
-      delay: 2000,
-    });
-  }
   $(function () {
     $('#data').DataTable({
       'paging'      : true,
@@ -65,4 +57,6 @@
       'autoWidth'   : false
     })
   })
+
+ 
 </script>

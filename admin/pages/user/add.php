@@ -1,7 +1,7 @@
 <?php
 include_once './includes/user.inc.php';
 $user = new User($db);
-if($_POST){
+if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
     $user->user_name=$_POST['user_name'];
     $user->user_full_name=$_POST['user_full_name'];
     $user->user_nip=$_POST['user_nip'];

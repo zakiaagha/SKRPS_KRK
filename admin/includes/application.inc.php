@@ -38,6 +38,8 @@ class Application{
 	public $app_file_size; 
 	public $app_file_type; 
 	public $app_seq_file; 
+	public $uid;
+	public $datenow;
 	
 	public function __construct($db){
 		$this->conn = $db;
