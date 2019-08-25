@@ -1,32 +1,4 @@
-<?php
-include_once './includes/user.inc.php';
-$user = new User($db);
-if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
-    $user->user_name=$_POST['user_name'];
-    $user->user_full_name=$_POST['user_full_name'];
-    $user->user_nip=$_POST['user_nip'];
-    $user->user_email=$_POST['user_email'];
-    $user->user_password=md5($_POST['user_password']);
-    $user->user_address=$_POST['user_address'];
-    $user->user_telpon=$_POST['user_telpon'];
-    $user->user_role=$_POST['user_role'];
-    $user->uid=$_SESSION['user_name'];
-    $user->datenow=date("Y-m-d H:i:s");  
-    
-    if($user->insert()){
-      $_SESSION["errorType"] = "success";
-      $_SESSION["errorMsg"] = "Penambahan pengguna berhasil";
-      // echo "<script type='text/javascript' >alert('".$_SESSION['role_id']."')</script>";
-       header('location:index.php?m=krk_usr');
-    } else {
-      $_SESSION["errorType"] = "danger";
-      $_SESSION["errorMsg"] = "Penambahan pengguna gagal";
-    }
-}
-
-?>
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
+<!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
         Pengguna
@@ -46,20 +18,21 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
             </div>
             <!-- /.box-header -->
 
-            <form  id="user" name="user" method="POST" action="index.php?m=krk_add_usr">
+             <form role="form" method="post" id="add-user">
               <div class="box-body">
+                <input type="hidden" class="form-control" id="mode" name="mode" placeholder="Nama Lengkap" value="create">
                <div class="col-md-4">
                <div class="form-group">
                   <label for="namaLengkap">Nama Lengkap</label>
-                  <input type="name" class="form-control" id="user_full_name" name="user_full_name" placeholder="Nama Lengkap">
+                  <input type="name" class="form-control" id="user_full_name" name="user_full_name" placeholder="Nama Lengkap" required>
                 </div>
                 <div class="form-group">
                   <label for="namaPengguna">Nama Pengguna</label>
-                  <input type="username" class="form-control" id="user_name" name="user_name" placeholder="Nama Pengguna">
+                  <input type="username" class="form-control" id="user_name" name="user_name" placeholder="Nama Pengguna" required>
                 </div>
                 <div class="form-group">
                   <label for="nip">NIP</label>
-                  <input type="nip" class="form-control" id="user_nip" name="user_nip" placeholder="NIP">
+                  <input type="nip" class="form-control" id="user_nip" name="user_nip" placeholder="NIP" required>
                 </div>
                 <div class="form-group">
                   <label for="alamat">Alamat</label>
@@ -75,7 +48,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
                 </div>
                 <div class="form-group">
                   <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Password">
+                  <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Password" required>
                 </div>
                 <!-- select -->
                 <div class="form-group">
@@ -101,5 +74,21 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
       <!-- /.row -->
     </section>
     <!-- /.content -->
-  </div>
+    <script type="text/javascript">
+
+    $(document).ready(function() {
+      $('#add-user').submit(function(e){
+          e.preventDefault();
+          var inputs = $(this).serialize();
+            $.post("pages/user/submit.php", inputs, function(data){
+              $.bootstrapGrowl(data.msg,{
+                     type: data.type,
+                     delay: 2000,
+                    }); 
+            $("#konten").load("pages/user/user.php");
+                
+            },'json');
+          });
+      });
+    </script>
 

@@ -1,5 +1,5 @@
 <?php
-include_once 'admin/includes/config.php';
+include_once 'admin/include/config.php';
 
 $config = new Config();
 $db = $config->getConnection();

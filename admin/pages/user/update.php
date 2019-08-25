@@ -1,37 +1,14 @@
-<?php
-include_once './includes/user.inc.php';
+<?php  
+include_once ("../../include/user.inc.php");
+include_once ("../../include/config.php");
+$config = new Config();
+$db = $config->getConnection();
 
 $user = new User($db);
-
-if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
-    $user->id = $_POST['uid'];
-    $user->user_name=$_POST['user_name'];
-    $user->user_full_name=$_POST['user_full_name'];
-    $user->user_nip=$_POST['user_nip'];
-    $user->user_email=$_POST['user_email'];
-    $user->user_password=md5($_POST['user_password']);
-    $user->user_address=$_POST['user_address'];
-    $user->user_telpon=$_POST['user_telpon'];
-    $user->user_role=$_POST['user_role'];
-    $user->uid=$_SESSION['user_name'];
-    $user->datenow=date("Y-m-d H:i:s");   
-    
-    if($user->update()){
-      $_SESSION["errorType"] = "success";
-      $_SESSION["errorMsg"] = "Edit pengguna berhasil";
-      header('location:index.php?m=krk_usr');
-    } else {
-      $_SESSION["errorType"] = "danger";
-      $_SESSION["errorMsg"] = "Edit pengguna gagal";
-    }
-} else {
-  $id=$_GET['uid'];
-  $user->id = $id;
-  $user->readOne();
-}
-
+$id=$_POST['id'];
+$user->id = $id;
+$user->readOne();
 ?>
-  <div class="content-wrapper">
     <section class="content-header">
       <h1>
         Pengguna
@@ -45,17 +22,19 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
             <div class="box-header with-border">
               <h3 class="box-title">Form Edit Pengguna</h3>
             </div>
-            <form  id="user" name="user" method="POST" action="index.php?m=krk_edit_usr&uid=c4ca4238a0b923820dcc509a6f75849b">
+
+             <form role="form" method="post" id="update-user">
+                <input type="hidden" class="form-control" id="mode" name="mode" placeholder="Nama Lengkap" value="update">
               <div class="box-body">
                <div class="col-md-4">
                <div class="form-group">
                   <label for="namaLengkap">Nama Lengkap</label>
                   <input type="hidden" class="form-control" id="uid" name="uid" value="<?php echo $id;?>">
-                  <input type="name" class="form-control" id="user_full_name" name="user_full_name" placeholder="Nama Lengkap" value="<?php echo $user->user_full_name;?>">
+                  <input type="name" class="form-control" id="user_full_name" name="user_full_name" placeholder="Nama Lengkap" value="<?php echo $user->user_full_name;?>" required>
                 </div>
                 <div class="form-group">
                   <label for="namaPengguna">Nama Pengguna</label>
-                  <input type="username" class="form-control" id="user_name" name="user_name" placeholder="Nama Pengguna" value="<?php echo $user->user_name;?>">
+                  <input type="username" class="form-control" id="user_name" name="user_name" placeholder="Nama Pengguna" value="<?php echo $user->user_name;?>" required>
                 </div>
                 <div class="form-group">
                   <label for="nip">NIP</label>
@@ -75,7 +54,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
                 </div>
                 <div class="form-group">
                   <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Password" value="<?php echo $user->user_password;?>">
+                  <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Password" value="<?php echo $user->user_password;?>" required>
                 </div>
                 <div class="form-group">
                   <label>Role</label>
@@ -95,5 +74,19 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
           </div>
       </div>
     </section>
-  </div>
-
+<script type="text/javascript">
+  $(document).ready(function() {
+      $('#update-user').submit(function(e){
+          e.preventDefault();
+          var inputs = $(this).serialize();
+          alert(inputs);
+            $.post("pages/user/submit.php", inputs, function(data){
+              $.bootstrapGrowl(data.msg,{
+                     type: data.type,
+                     delay: 2000,
+                    }); 
+              $("#konten").load("pages/user/user.php");
+            },'json');
+          });
+      });
+</script>

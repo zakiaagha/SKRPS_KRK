@@ -1,29 +1,29 @@
 <?php
-include_once 'includes/config.php';
-
+session_start();
+include_once 'include/config.php';
 $config = new Config();
 $db = $config->getConnection();
-	
-if($_POST){	
-	include_once 'includes/login.inc.php';
-	$login = new Login($db);
+  
+if($_POST){ 
+  include_once 'include/login.inc.php';
+  $login = new Login($db);
 
-	if ($_POST['username'] == "" || $_POST['password'] == "") {
+  if ($_POST['username'] == "" || $_POST['password'] == "") {
         $_SESSION["errorType"] = "danger";
         $_SESSION["errorMsg"] = "Enter username or password fields";
   } else {
     $login->userid = trim($_POST['username']);
-		$login->passid = trim(md5($_POST['password']));
+    $login->passid = trim(md5($_POST['password']));
 
-		if($login->login()){
+    if($login->login()){
       $_SESSION["errorType"] = "success";
       $_SESSION["errorMsg"] = "You have successfully logged in.";
       // echo "<script type='text/javascript' >alert('".$_SESSION['role_id']."')</script>";
-       header('location:index.php?hal=admin&sub=dashboard');
-		} else {
-			$_SESSION["errorType"] = "danger";
+       header('location:main.php');
+    } else {
+      $_SESSION["errorType"] = "danger";
       $_SESSION["errorMsg"] = "wrong username or password";
-		}
+    }
   }    
 }
 ?>
@@ -67,13 +67,13 @@ if($_POST){
 
     <form method="post">
       <div class="form-group">
-				<label for="InputUsername1">Username</label>
-			  <input type="text" class="form-control" name="username"  id="username" placeholder="Username" autofocus="">
-			</div>
-			<div class="form-group">
-			  <label for="InputPassword1">Password</label>
-				<input type="password" class="form-control" name="password" id="password" placeholder="Password">
-			</div>
+        <label for="InputUsername1">Username</label>
+        <input type="text" class="form-control" name="username"  id="username" placeholder="Username" autofocus="">
+      </div>
+      <div class="form-group">
+        <label for="InputPassword1">Password</label>
+        <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+      </div>
 
       <div class="row">
         <!-- /.col -->
@@ -83,7 +83,7 @@ if($_POST){
         <!-- /.col -->
       </div>
     </form>
-	<br/>
+  <br/>
 
     <!--<a href="#">I forgot my password</a><br>-->
 

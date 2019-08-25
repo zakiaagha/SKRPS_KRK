@@ -2,7 +2,7 @@
 include_once 'header.php';
 if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 	
-	include_once 'admin/includes/application.inc.php';
+	include_once 'admin/include/application.inc.php';
 	$app = new Application($db);
 
 	$format_file = array("zip", "pdf");
@@ -61,7 +61,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
     </section>
 	
     <section class="wow">
-      <div class="container">
+      <div class="container"><br>
       	<?php if ($_SESSION["errorMsg"] <> "") { ?>
         <div class="alert alert-<?php echo $_SESSION["errorType"] ?> alert-dismissable"><?php echo $_SESSION["errorMsg"]; ?></div>
     	<?php } ?><br>
