@@ -79,7 +79,6 @@ $user->readOne();
       $('#update-user').submit(function(e){
           e.preventDefault();
           var inputs = $(this).serialize();
-          alert(inputs);
             $.post("pages/user/submit.php", inputs, function(data){
               $.bootstrapGrowl(data.msg,{
                      type: data.type,

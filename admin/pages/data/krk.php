@@ -55,28 +55,30 @@
                 <?php
                 $no=0;
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                $month = GetRomawiFromNumber(date('m', strtotime($row['app_date'])));
+                $year = date('Y', strtotime($row['app_date']));
                 $no++
                 ?>
                 <tr>
                   <td><?php echo $no; ?></td>
-                  <td><a href="#"><?php echo $row['idm_application']."/PKRK/CKTR"; ?></a></td>
+                  <td><a style="cursor : pointer;" id="id_terms" onclick="getDetail('<?php echo $row['idm_application']?>')"><?php echo str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year; ?></a></td>
                   <td><?php echo $row['app_date']; ?></td>
                   <td><?php echo $row['app_name']; ?></td>
                   <td><?php echo $row['app_owner_address']; ?></td>
                   <td><?php echo $row['app_land_area']; ?></td>
-                  <td><?php echo $row['app_status']; ?></td>
+                  <td><b><?php echo $row['app_status']; ?></b></td>
                   <td>
                   <?php 
                   if ($_SESSION['role_id'] == 1) {?>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="setuju('<?php echo $row['idm_application'];?>')">Setujui</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" id="approve" onclick="tolak('<?php echo $row['idm_application'];?>')">Tolak</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Disetujui')">Setujui</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditunda')">Tolak</a>
                   <?php } elseif ($_SESSION['role_id'] == 2) { ?>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="terima('<?php echo $row['idm_application'];?>')">Diterima</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-success" id="approve" onclick="tunda('<?php echo $row['idm_application'];?>')">Tunda</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" id="approve" onclick="tolak('<?php echo $row['idm_application'];?>')">Tolak</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-warning" id="approve" onclick="batal('<?php echo $row['idm_application'];?>')">Batal</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Diterima')">Diterima</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-success" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditunda')">Tunda</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditolak')">Tolak</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-warning" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Batal')">Batal</a>
                   <?php } elseif ($_SESSION['role_id'] == 3) {?>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-info" id="approve" onclick="unggah('<?php echo $row['idm_application'];?>')">Unggah Photo</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-info" id="approve" onclick="unggah('<?php echo $row['idm_application'];?>','Unggah')">Unggah Photo</a>
                   <?php }
                   ?>
                   </td>
@@ -96,7 +98,7 @@
     </section>
     <!-- /.content -->
   <div class="modal" id="comment">
-      <form role="form" id="print-method" method="post">
+      <form role="form" id="comment-method" method="post">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -105,7 +107,9 @@
                 <h4 class="modal-title">Komentar</h4>
               </div>
               <div class="modal-body">
-                <input type="text" id="app_id" name="app_id">
+                <input type="hidden" id="mode" name="mode">
+                <input type="hidden" id="app_id" name="app_id">
+                <input type="hidden" id="type" name="type">
                 <textarea type="text" class="form-control" id="app_komentar" name="app_komentar" rows="5" autocomplete="off" required></textarea>   
               </div>
               <div class="modal-footer">
@@ -122,29 +126,40 @@
     
 
  <script type="text/javascript">
-
-    $('#data-krk').DataTable();
-    $("#comment").submit(function(){
-      var inputs = $(this).serialize();
-      alert(inputs);
-    /*
-        e.preventDefault();*//*
-        $('#comment').modal('hide');*//*
-        $.post("pages/data/submit.php", inputs, function(data){*//*
-          $("#comment").load(location.href+" #comment>*", function() {
-                    $.bootstrapGrowl('berhasil',{
-                      type: 'success',
-                      delay: 2000,
+    $(document).ready(function() {
+      $(window).scrollTop(0);
+       $('#comment-method').submit(function(e){
+          e.preventDefault();
+          var inputs = $(this).serialize();
+            $.post("pages/data/submit.php", inputs, function(data){
+              $.bootstrapGrowl(data.msg,{
+                     type: data.type,
+                     delay: 2000,
                     }); 
-                  });*/
-      /*
-            });*/
-      });
-      function tunda(id){
-        var app_id = id;
-        $('#comment').modal('show');
-        $("#app_id").val(app_id);
-      }
 
-      
+              $('#comment').modal('hide');
+              $("#konten").load("pages/data/krk.php");
+            },'json');
+          });
+
+      $('#data-krk').DataTable();
+    });
+    
+    function updateStatus(id, type){
+      var app_id = id;
+      var mode = 'status';
+      var type = type;
+
+      $('#comment').modal('show');
+      $("#app_id").val(app_id);
+      $("#mode").val(mode);
+      $("#type").val(type);
+
+    }      
+    function getDetail(id){
+      var id =  id;
+      $("#konten").load("pages/data/detail.php", { 
+         'id': id
+        });
+    }
     </script>

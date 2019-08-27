@@ -91,17 +91,6 @@ function generateNumber($abs, $no){
 
 }
 
-function generateBKTC($no){
-
-    //Setting transaction number format
-    $flag_number = str_pad($no, 5, '0', STR_PAD_LEFT); 
-    
-    //$generate = $flag_number."/".$abs_name."/".$project."/".GetRomawiFromNumber($month)."/".$year;
-
-    return $flag_number;
-
-}
-
 function terbilang_get_valid($str,$from,$to,$min=1,$max=9){
   $val=false;
   $from=($from<0)?0:$from;

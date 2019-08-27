@@ -28,6 +28,8 @@ class Config{
 
 }
 
+require_once 'functions.php';
+
 if ($_SESSION["errorType"] != "" && $_SESSION["errorMsg"] != "" ) {
     $ERROR_TYPE = $_SESSION["errorType"];
     $ERROR_MSG = $_SESSION["errorMsg"];
