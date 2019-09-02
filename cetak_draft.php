@@ -1,66 +1,98 @@
 <?php
-if($_POST){
-	
-	include_once 'includes/pemohon.inc.php';
-	$eks = new Pemohon($db);
-
-	$eks->nama_pemohon = $_POST['nama_pemohon'];
-	$eks->alamat_pemohon = $_POST['alamat_pemohon'];
-	$eks->nama_pemilik = $_POST['nama_pemilik'];
-	$eks->alamat_lokasi = $_POST['alamat_lokasi'];
-	$eks->no_pl = $_POST['no_pl'];
-	$eks->no_sertifikat = $_POST['no_sertifikat'];
-	$eks->luas_lahan = $_POST['luas_lahan'];
-	$eks->peruntukan_lahan = $_POST['peruntukan_lahan'];
-	$eks->peruntukan_bangunan = $_POST['peruntukan_bangunan'];
-	$eks->ketinggian_maksimum = $_POST['ketinggian_maksimum'];
-	$eks->jumlah_lantai = $_POST['jumlah_lantai'];
-	$eks->gsbdm = $_POST['gsbdm'];
-	$eks->gsbskn = $_POST['gsbskn'];
-	$eks->gsbskr = $_POST['gsbskr'];
-	$eks->gsbblk = $_POST['gsbblk'];
-	$eks->kdb = $_POST['kdb'];
-	$eks->klb = $_POST['klb'];
-	$eks->kdh = $_POST['kdh'];
-	$eks->ktb = $_POST['ktb'];
-	$eks->utilitas = $_POST['utilitas'];
-	$eks->inform = $_POST['inform'];
-	$eks->bln = date('m');
-	$eks->year = date('Y');
+if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
+  include_once ("admin/include/application.inc.php");
+  include_once ("admin/include/config.php");
+  $config = new Config();
+  $db = $config->getConnection();
+  
+  $app = new Application($db);
+  $app->app_nik = $_POST['app_nik'];
+  $stmt=$app->readByNik();
 }
 ?>
 
   <main id="main">
+
     <section id="call-to-action">
       <div class="container">
-        <h3 style="color: #fff;">Cetak Draft KRK</h3>
+        <h3 style="color: #fff;">Cek Status Pengajuan KRK</h3>
       </div>
     </section>
+
     <!--==========================
       About Section
     ============================-->
-    <section id="about" class="wow fadeInUp">
+    <section id="about" class="wow">
       <div class="container">
+        <form action="index.php?hal=cek_status" method="post" enctype="multipart/form-data"> 
         <div class="row">
+          <div class="col-lg-4">
+            <input type="text" class="form-control" id="app_nik" name="app_nik" autocomplete="off" placeholder="Masukkan NIK" required>
+          </div>
+          <div class="col-lg-1">
+            <button type="submit" class="btn btn-primary">Cari</button>
+          </div>
+        </div>  
+        </form>  
+        <br>    
+        <div class="col-xs-12 col-lg-12 table-responsive">
+                <table id="data-krk" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th width="3%">No</th>
+                  <th>Nomor</th>
+                  <th>Tanggal</th>
+                  <th>Nama Pemohon</th>
+                  <th>Lokasi</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+              
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                $no=0;
+                if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
+                 
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                $month = GetRomawiFromNumber(date('m', strtotime($row['app_date'])));
+                $year = date('Y', strtotime($row['app_date']));
+                $no++;
+              /*   if (isset($row['idm_application'])) {
+                    echo 'yes';
+                  } else {
+                    echo 'yes';
+                  }*/
+                ?>
+                <tr>
+                  <td><?php echo $no; ?></td>
+                  <td><a style="cursor : pointer;" id="id_terms" onclick="getDetail('<?php echo $row['idm_application']?>')"><?php echo str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year; ?></a></td>
+                  <td><?php echo $row['app_date']; ?></td>
+                  <td><?php echo $row['app_name']; ?></td>
+                  <td><?php echo $row['app_owner_address']; ?></td>
+                  <td><?php echo $row['app_status']; ?></td>
+                  <td><b><?php echo $row['app_comment']; ?></b></td>
+                </tr>
+                <?php
+                }
+              }
+                ?>
+                </tbody>
+                </table>
         </div>
       </div>
     </section><!-- #about -->
 
-    <!--
-      Call To Action Section
-    ============================-->
-    <section id="call-to-action" class="wow fadeInUp">
+    <br>
+    <section id="call-to-action" class="wow">
       <div class="container">
-    
-
       </div>
-    </section><!-- #call-to-action --> -->
-
+    </section>
 
     <!--==========================
       Contact Section
     ============================-->
-    <section id="contact" class="wow fadeInUp">
+    <section id="contact" class="wow">
       <div class="container">
         <div class="section-header">
           <h2>Kontak</h2>
@@ -101,6 +133,6 @@ if($_POST){
     </section><!-- #contact -->
 
   </main>
-		
-		<?php
+    
+    <?php
 ?>

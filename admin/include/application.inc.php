@@ -51,7 +51,7 @@ class Application{
 	}
 
 	function insert(){
-		$query = "insert into ".$this->table_name." (app_name, app_nik, app_address, app_telepon, app_owner_name, app_owner_address, app_land_area, app_date) values(?,?,?,?,?,?,?,?)";
+		$query = "insert into ".$this->table_name." (app_name, app_nik, app_address, app_telepon, app_owner_name, app_owner_address, app_land_area, app_date, app_lat, app_long, app_cr_uid, app_cr_dt) values(?,?,?,?,?,?,?,?,?,?,?,?)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->app_name);
 		$stmt->bindParam(2, $this->app_nik);
@@ -60,7 +60,11 @@ class Application{
 		$stmt->bindParam(5, $this->app_owner_name);
 		$stmt->bindParam(6, $this->app_owner_address);
 		$stmt->bindParam(7, $this->app_land_area);
-		$stmt->bindParam(8, date('Y-m-d'));
+		$stmt->bindParam(8, $this->app_date);
+		$stmt->bindParam(9, $this->app_lat);
+		$stmt->bindParam(10, $this->app_long);
+		$stmt->bindParam(11, $this->app_name);
+		$stmt->bindParam(12, $this->datenow);
 		
 		if($stmt->execute()){
 			$this->app_id = $this->conn->lastInsertId();
@@ -72,14 +76,32 @@ class Application{
 	}
 
 	function insertAttachment(){
+		$query = "insert into ".$this->table_image." (app_image_id, app_image_seq, app_image_name, app_image_type, app_image_cr_uid, app_image_cr_dt) values(?,?,?,?,?,?)";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(1, $this->app_id);
+		$stmt->bindParam(2, $this->app_seq_file);
+		$stmt->bindParam(3, $this->app_file_name);
+		$stmt->bindParam(4, $this->app_file_type);
+		$stmt->bindParam(5, $this->uid);
+		$stmt->bindParam(6, $this->datenow);
+		
+		if($stmt->execute()){
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+
+	function insertImage(){
 		$query = "insert into ".$this->table_attach." (app_attach_id, app_attach_seq, app_attach_name, app_attach_type, app_attach_cr_uid, app_attach_cr_dt) values(?,?,?,?,?,?)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->app_id);
 		$stmt->bindParam(2, $this->app_seq_file);
 		$stmt->bindParam(3, $this->app_file_name);
 		$stmt->bindParam(4, $this->app_file_type);
-		$stmt->bindParam(5, $_SESSION['username']);
-		$stmt->bindParam(6, date("Y-m-d H:i:s"));
+		$stmt->bindParam(5, $this->app_name);
+		$stmt->bindParam(6, $this->datenow);
 		
 		if($stmt->execute()){
 			return true;
@@ -93,6 +115,15 @@ class Application{
 		$query = "SELECT * FROM ".$this->table_name;
         $stmt = $this->conn->prepare( $query );
         $stmt->execute();
+        
+        return $stmt;
+    }
+
+    function readByNik(){
+		$query = "SELECT * FROM ".$this->table_name." WHERE app_nik=?";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(1, $this->app_nik);
+		$stmt->execute();
         
         return $stmt;
     }

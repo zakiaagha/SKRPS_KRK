@@ -53,9 +53,9 @@ if($_POST){
 <div class="login-box">
   <div class="login-logo">
     <img src="dist/img/Lambang_Kota_Batam.png" style="position: center; width: 65px; margin-bottom: 10px;"/><br/>
-    <p style="font-size: 20px; margin-bottom: -2px;"><b>SISTEM INFORMASI PERIZINAN</b></p>
-    <p style="font-size: 15px; margin-bottom: -2px;">KETERANGAN RENCANA KOTA</p>
-    <p style="font-size: 15px; margin-bottom: -7px;">KOTA BATAM</p>
+    <p style="font-size: 20px; margin-bottom: -2px; color: #fff;"><b>SISTEM INFORMASI PERIZINAN</b></p>
+    <p style="font-size: 15px; margin-bottom: -2px; color: #fff;">KETERANGAN RENCANA KOTA</p>
+    <p style="font-size: 15px; margin-bottom: -7px; color: #fff;">KOTA BATAM</p>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">

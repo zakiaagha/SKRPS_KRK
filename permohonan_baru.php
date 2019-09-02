@@ -16,7 +16,12 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 	$app->app_owner_name = $_POST['app_owner_name'];
 	$app->app_owner_address= $_POST['app_owner_address'];
 	$app->app_land_area = $_POST['app_land_area'];
-	
+	$app->app_lat = $_POST['app_lat'];
+	$app->app_long = $_POST['app_long'];
+	$app->app_date=date("Y-m-d");
+	$app->uid=$_POST['app_name'];
+	$app->datenow=date("Y-m-d H:i:s");
+
 	if($app->insert()){
 	  $seq=0;
 	  foreach ($_FILES['files']['name'] as $f => $name) { 
@@ -96,6 +101,17 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 				<label for="jm">Luas Tanah</label>	    
 				<input type="text" class="form-control" id="app_land_area" name="app_land_area" autocomplete="off" required> 
 			</div>  
+
+			<div class="form-group">
+				<input type="text" class="form-control" id="app_lat" name="app_lat" autocomplete="off" placeholder="Latitude" required> 
+			</div>
+			<div class="form-group">
+				<input type="text" class="form-control" id="app_long" name="app_long" autocomplete="off" placeholder="Longitude" required> 
+			<br>
+			    <div id="dvMap" style="width: auto; height: 300px">
+			    </div>
+			</div>
+			<br>
 			<div class="form-group">
 				<label for="jm">KTP</label>	   
 				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
@@ -204,12 +220,21 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 
   </main>
 	<script type="text/javascript">
-		
-    $(document).ready(function() {
-    	 $('#app_date').datepicker({
-          todayHighlight: true,
-          autoclose: true,
-          format: 'yyyy-mm-dd'
-        })
-    });
+		window.onload = function () {
+            var mapOptions = {
+                center: new google.maps.LatLng(1.128805, 104.054823),
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var infoWindow = new google.maps.InfoWindow();
+            var latlngbounds = new google.maps.LatLngBounds();
+            var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+            google.maps.event.addListener(map, 'click', function (e) {
+            	$("#app_lat").val(e.latLng.lat());
+            	$("#app_long").val(e.latLng.lng());/*
+                alert("Latitude: " + e.latLng.lat() + "\r\nLongitude: " + e.latLng.lng());*/
+            });
+        }
 	</script>
+
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr5dE6Rz99tbJzGSw5CaKIDXbT6Vvnzao&sensor=false" type="text/javascript"></script>
