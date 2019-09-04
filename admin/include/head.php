@@ -1,15 +1,13 @@
-<?php
-session_start();
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8"><!-- 
   <meta http-equiv="refresh" content="15"> -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>General Ledger | TJP Group</title>
+  <title>Sistem Informasi Perizinan Keterangan Rencana Kota</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="shortcut icon" type="image/png" href="dist/img/favicon.png">
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
   <!-- daterange picker -->
   <link rel="stylesheet" href="bower_components/bootstrap-daterangepicker/daterangepicker.css">
   <!-- bootstrap datepicker -->

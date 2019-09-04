@@ -12,7 +12,9 @@ if ($hal == 'cara_pengajuan') {
   include 'permohonan_baru.php';
 } elseif ($hal == 'cek_status') {
   include 'cek_status.php';
-} elseif ($hal == 'cetak_draft') {
+} elseif ($hal == 'draft_krk') {
+  include 'draft.php';
+} elseif ($hal == 'draft_krk') {
   include 'cetak_draft.php';
 } else {
   include 'intro.php';

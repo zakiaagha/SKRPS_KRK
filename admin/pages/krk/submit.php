@@ -22,12 +22,12 @@ if ($mode == 'status') {
 
 	if($app->updateStatus()){
 		$data = array(
-	                        "msg"     => 'Permohonan KRK ditunda',
+	                        "msg"     => 'Verifikasi berhasil',
 	                        "type"  => 'warning'
 	                    );
 	} else {
 	    $data = array(
-	                        "msg"     => 'Penundaan Permohonan KRK gagal',
+	                        "msg"     => 'Verifikasi gagal',
 	                        "type"  => 'danger'
 	                    );
 	}

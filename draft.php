@@ -15,7 +15,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 
     <section id="call-to-action">
       <div class="container">
-        <h3 style="color: #fff;">Cek Status Pengajuan KRK</h3>
+        <h3 style="color: #fff;">Cetak Draft KRK</h3>
       </div>
     </section>
 
@@ -24,7 +24,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
     ============================-->
     <section id="about" class="wow">
       <div class="container">
-        <form action="index.php?hal=cek_status" method="post" enctype="multipart/form-data"> 
+        <form action="index.php?hal=draft_krk" method="post" enctype="multipart/form-data"> 
         <div class="row">
           <div class="col-lg-4">
             <input type="text" class="form-control" id="app_nik" name="app_nik" autocomplete="off" placeholder="Masukkan NIK" required>
@@ -45,7 +45,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
                   <th>Nama Pemohon</th>
                   <th>Lokasi</th>
                   <th>Status</th>
-                  <th>Keterangan</th>
+                  <th>Aksi</th>
               
                 </tr>
                 </thead>
@@ -83,7 +83,12 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
                      $color = '#3A6FD8';
                   }
                    echo "<b style='color:".$color."'>".$row['app_status']."</b>"; ?></td>
-                  <td><?php echo $row['app_comment']; ?></td>
+                  <td>
+                  <?php if ($row['app_status'] == 'Disetujui') {
+                  ?> 
+                    <a style="cursor : pointer; color: #fff;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="unggah('<?php echo md5($row['idm_application']);?>')">Print Draft</a>
+                  <?php }?>
+                  </td>
                 </tr>
                 <?php
                 }
@@ -145,6 +150,10 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
     </section><!-- #contact -->
 
   </main>
-		
-		<?php
-?>
+    
+  <script type="text/javascript">
+    function unggah(id){
+      var apps_id = id
+      window.open("cetak_draft.php?apps_id="+apps_id+"&type=draft", '_blank');
+    }
+    </script>

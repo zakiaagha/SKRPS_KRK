@@ -2,9 +2,9 @@
     <!-- Logo -->
     <a href="main.php" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels "-->
-      <span class="logo-mini"><strong>GL</strong></span>
+      <span class="logo-mini"><strong>SIP</strong></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><strong>GENERAL LEDGER</strong></span>
+      <span class="logo-lg"><strong>SIP KRK</strong></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">

@@ -80,7 +80,7 @@
               <li><a href="index.php?hal=cara_pengajuan">Tata Cara Pengajuan</a></li>
               <li><a href="index.php?hal=permohonan_baru">Permohonan Baru</a></li>
               <li><a href="index.php?hal=cek_status">Status Permohonan</a></li>
-              <li><a href="index.php?hal=cetak_draft">Draft Permohonan</a></li>
+              <li><a href="index.php?hal=draft_krk">Draft Permohonan</a></li>
             </ul>
           </li>
           <li><a href="#contact">Kontak</a></li>

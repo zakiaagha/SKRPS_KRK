@@ -13,34 +13,34 @@
               <i class="fa fa-user"></i> 
               </i>Pengguna</a>
           </li>
-          <li id="data">
-            <a id="data" href="krk">
+          <li id="krk">
+            <a id="krk" href="krk">
               <i class="fa fa-database"></i>
               <span>Data KRK</span>
             </a>
           </li>
-          <li id="data_laporan">
-            <a href="?m=krk_report">
+          <li id="report">
+            <a id="report" href="report">
               <i class="fa fa-pie-chart"></i>
               <span>Laporan</span>
             </a>
           </li>
         <?php } elseif ($_SESSION['role_id'] == 2) { ?>
-          <li id="data">
-            <a id="data" href="krk">
+          <li id="krk">
+            <a id="krk" href="krk">
               <i class="fa fa-database"></i>
               <span>Data KRK</span>
             </a>
           </li>
-          <li id="data_laporan">
-            <a href="?m=krk_report">
+          <li id="report">
+            <a id="report" href="report">
               <i class="fa fa-pie-chart"></i>
               <span>Laporan</span>
             </a>
           </li>
         <?php } elseif ($_SESSION['role_id'] == 3) { ?>
-          <li id="data">
-            <a id="data" href="krk">
+          <li id="krk">
+            <a id="krk" href="krk">
               <i class="fa fa-database"></i>
               <span>Data KRK</span>
             </a>

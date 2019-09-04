@@ -61,7 +61,16 @@
                 ?>
                 <tr>
                   <td><?php echo $no; ?></td>
-                  <td><a style="cursor : pointer;" id="id_terms" onclick="getDetail('<?php echo $row['idm_application']?>')"><?php echo str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year; ?></a></td>
+                  <td>
+                    <?php 
+
+                    if ($_SESSION['role_id'] == 3) {
+                      echo str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year;
+                    } else {
+                      echo "<a style='cursor : pointer;' id='id_terms' onclick='getDetail(".$row['idm_application'].")'>".str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year."</a>";
+                    } 
+                    ?>
+                  </td>
                   <td><?php echo $row['app_date']; ?></td>
                   <td><?php echo $row['app_name']; ?></td>
                   <td><?php echo $row['app_owner_address']; ?></td>
@@ -125,7 +134,7 @@
     </div>
      <div class="modal" id="unggah">
       <form role="form" id="unggah-method" method="post">
-          <div class="modal-dialog">
+          <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -133,10 +142,8 @@
                 <h4 class="modal-title">Unggah Foto Lokasi</h4>
               </div>
               <div class="modal-body"> 
-                  <input type="text" class="form-control" id="app_id_unggah" name="app_id_unggah">
-                  <input type="text" class="form-control" id="mode_unggah" name="mode_unggah"><div class="form-group">
-                  <input type="file" class="form-control" id="file" name="files[]" multiple="multiple" accept="image/*" required>
-                  <small>&nbsp;* file format JPG. Maximum upload file size 2Mb.</small>
+                  <embed src="upload/KTP.pdf"
+                               frameborder="0" width="100%" height="400px">
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" style="width:90px;">Simpan</button>
@@ -155,14 +162,14 @@
        $('#comment-method').submit(function(e){
           e.preventDefault();
           var inputs = $(this).serialize();
-            $.post("pages/data/submit.php", inputs, function(data){
+            $.post("pages/krk/submit.php", inputs, function(data){
               $.bootstrapGrowl(data.msg,{
                      type: data.type,
                      delay: 2000,
                     }); 
 
               $('#comment').modal('hide');
-              $("#konten").load("pages/data/krk.php");
+              $("#konten").load("pages/krk/krk.php");
             },'json');
           });
 
@@ -170,14 +177,14 @@
           e.preventDefault();
           var inputs = new FormData(this.form); 
           alert(inputs);
-            $.post("pages/data/submit.php", inputs, function(data){
+            $.post("pages/krk/submit.php", inputs, function(data){
               $.bootstrapGrowl(data.msg,{
                      type: data.type,
                      delay: 2000,
                     }); 
 
               $('#unggah').modal('hide');
-              $("#konten").load("pages/data/krk.php");
+              $("#konten").load("pages/krk/krk.php");
             },'json');
           });
 
@@ -206,7 +213,7 @@
 
     function getDetail(id){
       var id =  id;
-      $("#konten").load("pages/data/detail.php", { 
+      $("#konten").load("pages/krk/detail.php", { 
          'id': id
         });
     }
