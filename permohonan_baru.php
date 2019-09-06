@@ -16,6 +16,13 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 	$app->app_owner_name = $_POST['app_owner_name'];
 	$app->app_owner_address= $_POST['app_owner_address'];
 	$app->app_land_area = $_POST['app_land_area'];
+	$app->app_proposed_land_area = $_POST['app_proposed_land_area'];
+	$app->app_certificate_no = $_POST['app_certificate_no'];
+	$app->app_pl_no = $_POST['app_pl_no'];
+	$app->app_allotment_perpres = $_POST['app_allotment_perpres'];
+	$app->app_allotment_prov = $_POST['app_allotment_prov'];
+	$app->app_building_allotment = $_POST['app_building_allotment'];
+	$app->app_imb_no = $_POST['app_imb_no'];
 	$app->app_lat = $_POST['app_lat'];
 	$app->app_long = $_POST['app_long'];
 	$app->app_date=date("Y-m-d");
@@ -99,10 +106,37 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 				<textarea type="text" class="form-control" id="app_owner_address" name="app_owner_address" autocomplete="off" required></textarea>	
 			</div>  
 			<div class="form-group">
-				<label for="jm">Luas Tanah</label>	    
+				<label for="jm">Luas Lahan</label>	    
 				<input type="text" class="form-control" id="app_land_area" name="app_land_area" autocomplete="off" required> 
+			</div> 
+			<div class="form-group">
+				<label for="jm">Luas Lahan Permohonan</label>	    
+				<input type="text" class="form-control" id="app_proposed_land_area" name="app_proposed_land_area" autocomplete="off" required> 
+			</div>   
+			<div class="form-group">
+				<label for="jm">No. Sertifikat</label>	    
+				<input type="text" class="form-control" id="app_certificate_no" name="app_certificate_no" autocomplete="off" required> 
 			</div>  
-
+			<div class="form-group">
+				<label for="jm">No. PL</label>	    
+				<input type="text" class="form-control" id="app_pl_no" name="app_pl_no" autocomplete="off" required> 
+			</div>  
+			<div class="form-group">
+				<label for="jm">No. IMB Lama</label>	    
+				<input type="text" class="form-control" id="app_imb_no" name="app_imb_no" autocomplete="off"> 
+			</div>  
+			<div class="form-group">
+				<label for="jm">Peruntukan Lahan Perpres 87/2011</label>	    
+				<input type="text" class="form-control" id="app_allotment_perpres" name="app_allotment_perpres" autocomplete="off"> 
+			</div> 
+			<div class="form-group">
+				<label for="jm">Peruntukan Lahan Prov. Kepri 1/2017</label>	    
+				<input type="text" class="form-control" id="app_allotment_prov" name="app_allotment_prov" autocomplete="off"> 
+			</div> 
+			<div class="form-group">
+				<label for="jm">Peruntukan Bangunan</label>	    
+				<input type="text" class="form-control" id="app_building_allotment" name="app_building_allotment" autocomplete="off"> 
+			</div> 
 			<div class="form-group">
 				<input type="text" class="form-control" id="app_lat" name="app_lat" autocomplete="off" placeholder="Latitude" required> 
 			</div>

@@ -95,12 +95,26 @@ $stmt2=$app->readImage();
                       <tr>
                         <td style="border: none;" width="15%">Luas Lahan</td>
                         <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $app->app_land_area?></td>
+                        <td style="border: none;">
+                          <?php 
+                          if ($_SESSION['role_id'] == 1) {
+                            echo "<input type='text' class='form-control' id='app_land_area' name='app_land_area' autocomplete='off' value='".$app->app_land_area."' required>";
+                          } else {                          
+                            echo $app->app_land_area;
+                          }?>
+                        </td>
                       </tr> 
                       <tr>
                         <td style="border: none;" width="15%">Luas Lahan Permohonan</td>
                         <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $app->app_proposed_land_area?></td>
+                        <td style="border: none;">
+                          <?php 
+                          if ($_SESSION['role_id'] == 1) {
+                            echo "<input type='text' class='form-control' id='app_proposed_land_area' name='app_proposed_land_area' autocomplete='off' value='".$app->app_proposed_land_area."' required>";
+                          } else {                          
+                            echo $app->app_proposed_land_area;
+                          }?>
+                        </td>
                       </tr> 
                       <tr>
                         <td style="border: none;" width="45%">No. IMB Lama</td>
@@ -238,9 +252,9 @@ $stmt2=$app->readImage();
                         <td style="border: none;">
                           <?php 
                           if ($_SESSION['role_id'] == 1) {
-                            echo "<input type='text' class='form-control' id='app_min_gsp' name='app_min_gsp' autocomplete='off' value='".$eks->app_min_gsp."' required>";
+                            echo "<input type='text' class='form-control' id='app_min_gsp' name='app_min_gsp' autocomplete='off' value='".$app->app_min_gsp."' required>";
                           } else {                          
-                            echo $eks->app_min_gsp;
+                            echo $app->app_min_gsp;
                           }?>
                         </td>
                       </tr> 
@@ -250,9 +264,9 @@ $stmt2=$app->readImage();
                         <td style="border: none;">
                           <?php 
                           if ($_SESSION['role_id'] == 1) {
-                            echo "<input type='text' class='form-control' id='app_max_kdb' name='app_max_kdb' autocomplete='off' value='".$eks->app_max_kdb."' required>";
+                            echo "<input type='text' class='form-control' id='app_max_kdb' name='app_max_kdb' autocomplete='off' value='".$app->app_max_kdb."' required>";
                           } else {                          
-                            echo $eks->app_max_kdb;
+                            echo $app->app_max_kdb;
                           }?>
                         </td>
                       </tr> 
@@ -262,9 +276,9 @@ $stmt2=$app->readImage();
                         <td style="border: none;">
                           <?php 
                           if ($_SESSION['role_id'] == 1) {
-                            echo "<input type='text' class='form-control' id='app_max_klb' name='app_max_klb' autocomplete='off' value='".$eks->app_max_klb."' required>";
+                            echo "<input type='text' class='form-control' id='app_max_klb' name='app_max_klb' autocomplete='off' value='".$app->app_max_klb."' required>";
                           } else {                          
-                            echo $eks->app_max_klb;
+                            echo $app->app_max_klb;
                           }?>
                         </td>
                       </tr> 
@@ -407,14 +421,13 @@ $stmt2=$app->readImage();
       $('#update-krk').submit(function(e){
           e.preventDefault();
           var inputs = $(this).serialize();
-          alert(inputs);
-            /*$.post("pages/krk/submit.php", inputs, function(data){
+            $.post("pages/krk/submit.php", inputs, function(data){
               $.bootstrapGrowl(data.msg,{
                      type: data.type,
                      delay: 2000,
                     }); 
               $("#konten").load("pages/krk/krk.php");
-            },'json');*/
+            },'json');
           });
       });
   function lihatPDF(name){

@@ -33,6 +33,7 @@ if ($mode == 'status') {
 	}
 	echo json_encode($data);
 } elseif ($mode == 'update') {
+	$app->app_id=$app_id;
 	$app->app_certificate_no=$_POST['app_certificate_no'];
 	$app->app_pl_no=$_POST['app_pl_no'];
 	$app->app_imb_no=$_POST['app_imb_no'];
@@ -50,6 +51,8 @@ if ($mode == 'status') {
 	$app->app_max_klb=$_POST['app_max_klb'];
 	$app->app_min_kdh=$_POST['app_min_kdh'];
 	$app->app_max_ktb=$_POST['app_max_ktb'];
+	$app->app_land_area=$_POST['app_land_area'];
+	$app->app_proposed_land_area=$_POST['app_proposed_land_area'];
 	$app->app_row=$_POST['app_row'];
 	$app->uid=$_SESSION['user_name'];
 	$app->datenow=date("Y-m-d H:i:s");
@@ -99,9 +102,7 @@ if ($mode == 'status') {
 	                        "msg"     => $_FILES['files']['name'][$f],
 	                        "type"  => 'warning'
 	                    );
-	}	
-	
-
+	}
 	echo json_encode($data);
 }
 ?>

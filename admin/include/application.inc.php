@@ -52,7 +52,7 @@ class Application{
 	}
 
 	function insert(){
-		$query = "insert into ".$this->table_name." (app_name, app_nik, app_address, app_telepon, app_owner_name, app_owner_address, app_land_area, app_date, app_lat, app_long, app_cr_uid, app_cr_dt) values(?,?,?,?,?,?,?,?,?,?,?,?)";
+		$query = "insert into ".$this->table_name." (app_name, app_nik, app_address, app_telepon, app_owner_name, app_owner_address, app_land_area, app_proposed_land_area, app_certificate_no, app_pl_no, app_allotment_perpres, app_allotment_prov, app_building_allotment, app_imb_no, app_date, app_lat, app_long, app_cr_uid, app_cr_dt) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->app_name);
 		$stmt->bindParam(2, $this->app_nik);
@@ -61,11 +61,18 @@ class Application{
 		$stmt->bindParam(5, $this->app_owner_name);
 		$stmt->bindParam(6, $this->app_owner_address);
 		$stmt->bindParam(7, $this->app_land_area);
-		$stmt->bindParam(8, $this->app_date);
-		$stmt->bindParam(9, $this->app_lat);
-		$stmt->bindParam(10, $this->app_long);
-		$stmt->bindParam(11, $this->app_name);
-		$stmt->bindParam(12, $this->datenow);
+		$stmt->bindParam(8, $this->app_proposed_land_area);
+		$stmt->bindParam(9, $this->app_certificate_no);
+		$stmt->bindParam(10, $this->app_pl_no);
+		$stmt->bindParam(11, $this->app_allotment_perpres);
+		$stmt->bindParam(12, $this->app_allotment_prov);
+		$stmt->bindParam(13, $this->app_building_allotment);
+		$stmt->bindParam(14, $this->app_imb_no);
+		$stmt->bindParam(15, $this->app_date);
+		$stmt->bindParam(16, $this->app_lat);
+		$stmt->bindParam(17, $this->app_long);
+		$stmt->bindParam(18, $this->app_name);
+		$stmt->bindParam(19, $this->datenow);
 		
 		if($stmt->execute()){
 			$this->app_id = $this->conn->lastInsertId();
@@ -187,36 +194,33 @@ class Application{
 	}
 
     function update(){
-    	
-	$app->app_certificate_no=$_POST['app_certificate_no'];
-	$app->app_pl_no=$_POST['app_pl_no'];
-	$app->app_imb_no=$_POST['app_imb_no'];
-	$app->app_allotment_perpres=$_POST['app_allotment_perpres'];
-	$app->app_allotment_prov=$_POST['app_allotment_prov'];
-	$app->app_building_allotment=$_POST['app_building_allotment'];
-	$app->app_max_building_height=$_POST['app_max_building_height'];
-	$app->app_no_of_floors=$_POST['app_no_of_floors'];
-	$app->app_min_gsb_front=$_POST['app_min_gsb_front'];
-	$app->app_min_gsb_right_side=$_POST['app_min_gsb_right_side'];
-	$app->app_min_gsb_left_side=$_POST['app_min_gsb_left_side'];
-	$app->app_min_gsb_back=$_POST['app_min_gsb_back'];
-	$app->app_min_gsp=$_POST['app_min_gsp'];
-	$app->app_max_kdb=$_POST['app_max_kdb'];
-	$app->app_max_klb=$_POST['app_max_klb'];
-	$app->app_min_kdh=$_POST['app_min_kdh'];
-	$app->app_max_ktb=$_POST['app_max_ktb'];
-	$app->app_row=$_POST['app_row'];
-	$app->uid=$_SESSION['user_name'];
-	$app->datenow=date("Y-m-d H:i:s");
 		$query = "UPDATE ".$this->table_name."
-				  SET app_status=?, app_comment=?, app_upd_uid=?, app_upd_dt=?
+				  SET app_certificate_no=?, app_pl_no=?, app_imb_no=?, app_allotment_perpres=?, app_allotment_prov=?, app_building_allotment=?,app_max_building_height=?, app_no_of_floors=?,app_min_gsb_front=?, app_min_gsb_right_side=?,app_min_gsb_left_side=?, app_min_gsb_back=?,app_min_gsp=?, app_max_kdb=?, app_max_klb=?, app_min_kdh=?,  app_max_ktb=?,  app_row=?, app_land_area=?, app_proposed_land_area=?, app_upd_uid=?, app_upd_dt=?
 				  WHERE idm_application = ?";
 		$stmt = $this->conn->prepare($query);
-		$stmt->bindParam(1, $this->app_status);
-		$stmt->bindParam(2, $this->app_comment);
-		$stmt->bindParam(3, $this->uid);
-		$stmt->bindParam(4, $this->datenow);
-		$stmt->bindParam(5, $this->app_id);
+		$stmt->bindParam(1, $this->app_certificate_no);
+		$stmt->bindParam(2, $this->app_pl_no);
+		$stmt->bindParam(3, $this->app_imb_no);
+		$stmt->bindParam(4, $this->app_allotment_perpres);
+		$stmt->bindParam(5, $this->app_allotment_prov);
+		$stmt->bindParam(6, $this->app_building_allotment);
+		$stmt->bindParam(7, $this->app_max_building_height);
+		$stmt->bindParam(8, $this->app_no_of_floors);
+		$stmt->bindParam(9, $this->app_min_gsb_front);
+		$stmt->bindParam(10, $this->app_min_gsb_right_side);
+		$stmt->bindParam(11, $this->app_min_gsb_left_side);
+		$stmt->bindParam(12, $this->app_min_gsb_back);
+		$stmt->bindParam(13, $this->app_min_gsp);
+		$stmt->bindParam(14, $this->app_max_kdb);
+		$stmt->bindParam(15, $this->app_max_klb);
+		$stmt->bindParam(16, $this->app_min_kdh);
+		$stmt->bindParam(17, $this->app_max_ktb);
+		$stmt->bindParam(18, $this->app_row);
+		$stmt->bindParam(19, $this->app_land_area);
+		$stmt->bindParam(20, $this->app_proposed_land_area);
+		$stmt->bindParam(21, $this->uid);
+		$stmt->bindParam(22, $this->datenow);
+		$stmt->bindParam(23, $this->app_id);
 		
 		if($stmt->execute()){
 			return true;

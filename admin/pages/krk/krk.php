@@ -41,7 +41,7 @@
                   <?php 
 
                   if ($_SESSION['role_id'] == 1) {
-                    echo "width='13%'";
+                    echo "width='17%'";
                   } elseif ($_SESSION['role_id'] == 2) {
                     echo "width='23%'";
                   } elseif ($_SESSION['role_id'] == 3) {
@@ -81,6 +81,10 @@
                   if ($_SESSION['role_id'] == 1) {?>
                     <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Disetujui')">Setujui</a>
                     <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditunda')">Tolak</a>
+                    <?php if ($row['app_status'] == 'Disetujui') {
+                    ?> 
+                      <a style="cursor : pointer; color: #fff;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="cetak('<?php echo md5($row['idm_application']);?>')">Print</a>
+                    <?php }?>
                   <?php } elseif ($_SESSION['role_id'] == 2) { ?>
                     <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Diterima')">Diterima</a>
                     <a style="cursor : pointer;" type="button" class="btn btn-sm btn-success" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditunda')">Tunda</a>
@@ -202,7 +206,10 @@
       $("#type").val(type);
 
     } 
-
+    function cetak(id){
+      var apps_id = id
+      window.open("cetak_draft.php?apps_id="+apps_id+"&type=draft", '_blank');
+    }
     function unggah(id){
       var app_id = id;
       var mode = 'unggah';

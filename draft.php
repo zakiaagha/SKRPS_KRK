@@ -86,7 +86,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
                   <td>
                   <?php if ($row['app_status'] == 'Disetujui') {
                   ?> 
-                    <a style="cursor : pointer; color: #fff;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="unggah('<?php echo md5($row['idm_application']);?>')">Print Draft</a>
+                    <a style="cursor : pointer; color: #fff;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="cetak('<?php echo md5($row['idm_application']);?>')">Print Draft</a>
                   <?php }?>
                   </td>
                 </tr>
@@ -152,7 +152,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
   </main>
     
   <script type="text/javascript">
-    function unggah(id){
+    function cetak(id){
       var apps_id = id
       window.open("cetak_draft.php?apps_id="+apps_id+"&type=draft", '_blank');
     }
