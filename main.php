@@ -7,7 +7,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-6 about-img"><br>
-            <img src="img/about-img.jpg" alt="">
+            <img src="img/about.jpg" alt="">
           </div>
 
           <div class="col-lg-6 content">

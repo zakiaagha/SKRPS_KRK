@@ -2,6 +2,9 @@
 session_start();
 include_once ("../../include/application.inc.php");
 include_once ("../../include/config.php");
+
+$path_attach = "upload/";
+$path_image = "images/";
 $config = new Config();
 $db = $config->getConnection();
 
@@ -11,6 +14,9 @@ $app->id = md5($id);
 $app->readOne();
 $month = GetRomawiFromNumber(date('m', strtotime($app->app_date)));
 $year = date('Y', strtotime($app->app_date));
+
+$stmt1=$app->readAttachment();
+$stmt2=$app->readImage();
 ?><!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -22,15 +28,16 @@ $year = date('Y', strtotime($app->app_date));
     <!-- Main content -->
     <section class="content">
       <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-12">
           <form role="form" method="post" id="update-krk">
+            <input type="hidden" id="mode" name="mode" value="update">
+            <input type="hidden" id="app_id" name="app_id" value="<?php echo $app->app_id;?>">
             <!-- Custom Tabs -->
             <div class="nav-tabs-custom">
               <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab_1" data-toggle="tab">Data Permohonan</a></li>
                 <li><a href="#tab_2" data-toggle="tab">Persyaratan Teknis</a></li>
-                <li><a href="#tab_3" data-toggle="tab">Berkas Persyaratan</a></li>
-                <li><a href="#tab_4" data-toggle="tab">Foto Hasil Survei</a></li>
+                <li><a href="#tab_3" data-toggle="tab">Berkas dan Foto Survei</a></li>
               </ul>
               <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
@@ -302,96 +309,59 @@ $year = date('Y', strtotime($app->app_date));
                 </div>
                 <!-- /.tab-pane -->
                 <div class="tab-pane" id="tab_3">
-                  <table class="table" style="border: none;">
-                    <tbody>  
-                      <tr>
-                        <td style="border: none;" width="45%">KTP</td>
-                        <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $results['th_ref']?></td>
-                      </tr>  
-                      <tr>
-                        <td style="border: none;" width="45%">PL</td>
-                        <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $results['th_ref']?></td>
-                      </tr>  
-                      <tr>
-                        <td style="border: none;" width="45%">Sertifikat</td>
-                        <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $results['th_ref']?></td>
-                      </tr>  
-                      <tr>
-                        <td style="border: none;" width="45%">Akte Notaris</td>
-                        <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $results['th_ref']?></td>
-                      </tr>  
-                      <tr>
-                        <td style="border: none;" width="45%">Bukti Lunas PBB</td>
-                        <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $results['th_ref']?></td>
-                      </tr>  
-                      <tr>
-                        <td style="border: none;" width="45%">Surat Pernyataan Keabsahan Dokumen</td>
-                        <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $results['th_ref']?></td>
-                      </tr> 
-                      <tr>
-                        <td style="border: none;" width="45%">Surat Kuasa</td>
-                        <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $results['th_ref']?></td>
-                      </tr> 
-                      <tr>
-                        <td style="border: none;" width="45%">IMB Lama</td>
-                        <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $results['th_ref']?></td>
-                      </tr> 
-                      <tr>
-                        <td style="border: none;" width="45%">Berkas Lainnya</td>
-                        <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $results['th_ref']?></td>
-                      </tr> 
-                    </tbody>
-                  </table> 
+
+                  <div class="row flex-row">
+                    <div class="col-md-4">          
+                      <h4><font style="font-size: 17px;"><b>&nbsp;&nbsp;BERKAS PERSYARATAN</b></font></h4>
+                      <table class="table" style="border: none;">
+                        <?php
+                        ?>
+                        <tbody>  
+                          <?php 
+                          while ($row = $stmt1->fetch(PDO::FETCH_ASSOC)){
+                          ?>
+                          <tr>
+                            <td style="border: none;"><?php echo $row['app_attach_name']?></td>
+                            <td style="border: none;" width="45%">
+                              <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="lihatPDF('<?php echo $row['app_attach_name'];?>')">Lihat</a>
+                            </td>
+                          </tr>  
+                        <?php } ?>
+                        </tbody>
+                      </table> 
+                    </div>
+                    <div class="col-md-8">                      
+                      <h4><font style="font-size: 17px;"><b>FOTO SURVEI</b></font></h4>
+                      <div id="foto_lokasi" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                          <?php
+                          $no=0;
+                          while ($row = $stmt2->fetch(PDO::FETCH_ASSOC)){
+                            if ($row['app_image_seq'] == 1) {
+                              $active = 'active';
+                            } else {
+                              $active = '';
+                            }
+                            echo "<div class='item ".$active."'>";
+                            echo "<img src='images/".$row['app_image_name']."' alt='First slide'>";
+                            echo "</div>";
+                            $no++;
+                          } ?>
+                          <a class="left carousel-control" href="#foto_lokasi" data-slide="prev">
+                            <span class="fa fa-angle-left"></span>
+                          </a>
+                          <a class="right carousel-control" href="#foto_lokasi" data-slide="next">
+                            <span class="fa fa-angle-right"></span>
+                          </a>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                
                   
                 </div>
                 <!-- /.tab-pane -->
-                <div class="tab-pane" id="tab_4">
-                  <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                    <ol class="carousel-indicators">
-                      <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                      <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
-                      <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
-                    </ol>
-                    <div class="carousel-inner">
-                      <div class="item active">
-                        <img src="http://placehold.it/900x500/39CCCC/ffffff&text=I+Love+Bootstrap" alt="First slide">
-
-                        <div class="carousel-caption">
-                          First Slide
-                        </div>
-                      </div>
-                      <div class="item">
-                        <img src="http://placehold.it/900x500/3c8dbc/ffffff&text=I+Love+Bootstrap" alt="Second slide">
-
-                        <div class="carousel-caption">
-                          Second Slide
-                        </div>
-                      </div>
-                      <div class="item">
-                        <img src="http://placehold.it/900x500/f39c12/ffffff&text=I+Love+Bootstrap" alt="Third slide">
-
-                        <div class="carousel-caption">
-                          Third Slide
-                        </div>
-                      </div>
-                    </div>
-                    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-                      <span class="fa fa-angle-left"></span>
-                    </a>
-                    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-                      <span class="fa fa-angle-right"></span>
-                    </a>
-                  </div>
-                </div>
                 <?php 
                 if ($_SESSION['role_id'] == 1) {?>
                   <br>
@@ -409,20 +379,21 @@ $year = date('Y', strtotime($app->app_date));
         <!-- /.col -->
     </section>
 
-    <div class="modal" id="unggah">
-      <form role="form" id="unggah-method" method="post">
+    <div class="modal" id="pdf">
+      <form role="form" id="pdf-method" method="post">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Unggah Foto Lokasi</h4>
+                <h4 class="modal-title">Lihat Berkas</h4>
               </div>
-              <div class="modal-body"> 
-                  <embed src="upload/KTP.pdf"
-                               frameborder="0" width="100%" height="400px">
+              <div class="modal-body">
+              <iframe src="" id='pdf_view' name="pdf_view" width="100%" height="400px" frameborder="0" allowtransparency="true"></iframe>   <!-- 
+                  <embed src="upload/KTP.pdf" id='pdf_view' name="pdf_view" frameborder="0" width="100%" height="400px"> -->
               </div>
               <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" style="width:90px;">Tutup</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -446,5 +417,10 @@ $year = date('Y', strtotime($app->app_date));
             },'json');*/
           });
       });
+  function lihatPDF(name){
+      var name = name;
+      $('#pdf').modal('show');
+      $("#pdf_view").attr("src","upload/"+name);
+    }
 </script>
 

@@ -69,14 +69,13 @@ class Application{
 		
 		if($stmt->execute()){
 			$this->app_id = $this->conn->lastInsertId();
-			return true;
+			return $this->app_id;
 		} else {
 			return false;
 		}
-		
 	}
 
-	function insertAttachment(){
+	function insertImage(){
 		$query = "insert into ".$this->table_image." (app_image_id, app_image_seq, app_image_name, app_image_type, app_image_cr_uid, app_image_cr_dt) values(?,?,?,?,?,?)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->app_id);
@@ -90,11 +89,10 @@ class Application{
 			return true;
 		} else {
 			return false;
-		}
-		
+		}	
 	}
 
-	function insertImage(){
+	function insertAttachment(){
 		$query = "insert into ".$this->table_attach." (app_attach_id, app_attach_seq, app_attach_name, app_attach_type, app_attach_cr_uid, app_attach_cr_dt) values(?,?,?,?,?,?)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->app_id);
@@ -109,7 +107,6 @@ class Application{
 		} else {
 			return false;
 		}
-		
 	}
 	
 	function readAll(){
@@ -130,7 +127,7 @@ class Application{
     }
 
     function readOne(){		
-		$query = "SELECT * FROM ".$this->table_name." LEFT JOIN ".$this->table_attach." ON app_attach_id=idm_application WHERE md5(idm_application)=?";
+		$query = "SELECT * FROM ".$this->table_name." WHERE md5(idm_application)=?";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->id);
 		$stmt->execute();
@@ -172,42 +169,61 @@ class Application{
 	}
 
 	function readAttachment(){		
-		$query = "SELECT * FROM ".$this->table_attach." WHERE app_attach_id=?";
+		$query = "SELECT * FROM ".$this->table_attach." WHERE md5(app_attach_id)=?";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->id);
 		$stmt->execute();
 
-		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-		
-		$this->id = $row['idm_user'];
-		$this->user_name = $row['user_name'];
-		$this->user_full_name = $row['user_full_name'];
-		$this->user_password = $row['user_password'];
-		$this->user_email = $row['user_email'];
-		$this->user_nip = $row['user_nip'];
-		$this->user_address = $row['user_address'];
-	    $this->user_telpon = $row['user_telpon'];
-	    $this->user_role = $row['rd_role_id'];
+		return $stmt;
 	}
 
 	function readImage(){		
-		$query = "SELECT * FROM ".$this->table_image." HERE app_image_id=?";
+		$query = "SELECT * FROM ".$this->table_image." WHERE md5(app_image_id)=?";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->id);
 		$stmt->execute();
 
-		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-		
-		$this->id = $row['idm_user'];
-		$this->user_name = $row['user_name'];
-		$this->user_full_name = $row['user_full_name'];
-		$this->user_password = $row['user_password'];
-		$this->user_email = $row['user_email'];
-		$this->user_nip = $row['user_nip'];
-		$this->user_address = $row['user_address'];
-	    $this->user_telpon = $row['user_telpon'];
-	    $this->user_role = $row['rd_role_id'];
+		return $stmt;
 	}
+
+    function update(){
+    	
+	$app->app_certificate_no=$_POST['app_certificate_no'];
+	$app->app_pl_no=$_POST['app_pl_no'];
+	$app->app_imb_no=$_POST['app_imb_no'];
+	$app->app_allotment_perpres=$_POST['app_allotment_perpres'];
+	$app->app_allotment_prov=$_POST['app_allotment_prov'];
+	$app->app_building_allotment=$_POST['app_building_allotment'];
+	$app->app_max_building_height=$_POST['app_max_building_height'];
+	$app->app_no_of_floors=$_POST['app_no_of_floors'];
+	$app->app_min_gsb_front=$_POST['app_min_gsb_front'];
+	$app->app_min_gsb_right_side=$_POST['app_min_gsb_right_side'];
+	$app->app_min_gsb_left_side=$_POST['app_min_gsb_left_side'];
+	$app->app_min_gsb_back=$_POST['app_min_gsb_back'];
+	$app->app_min_gsp=$_POST['app_min_gsp'];
+	$app->app_max_kdb=$_POST['app_max_kdb'];
+	$app->app_max_klb=$_POST['app_max_klb'];
+	$app->app_min_kdh=$_POST['app_min_kdh'];
+	$app->app_max_ktb=$_POST['app_max_ktb'];
+	$app->app_row=$_POST['app_row'];
+	$app->uid=$_SESSION['user_name'];
+	$app->datenow=date("Y-m-d H:i:s");
+		$query = "UPDATE ".$this->table_name."
+				  SET app_status=?, app_comment=?, app_upd_uid=?, app_upd_dt=?
+				  WHERE idm_application = ?";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(1, $this->app_status);
+		$stmt->bindParam(2, $this->app_comment);
+		$stmt->bindParam(3, $this->uid);
+		$stmt->bindParam(4, $this->datenow);
+		$stmt->bindParam(5, $this->app_id);
+		
+		if($stmt->execute()){
+			return true;
+		}else{
+			return false;
+		}
+    }
 
     function updateStatus(){
 		$query = "UPDATE ".$this->table_name."

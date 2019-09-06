@@ -37,13 +37,14 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 				$message[] = "$name is not a valid format";
 				continue; 
 			} else {
-		  		if(move_uploaded_file($_FILES["files"]["tmp_name"][$f], $path.$name))
+				$name_file = $app->app_id."_".$name;
+		  		if(move_uploaded_file($_FILES["files"]["tmp_name"][$f], $path.$name_file))
 		    	$count++;
 			}
 		}
 
 		$app->app_file_temp = $_FILES['files']['tmp_name'][$f];
-		$app->app_file_name = $_FILES['files']['name'][$f];
+		$app->app_file_name = $app->app_id."_".$_FILES['files']['name'][$f];
 		$app->app_file_type = $_FILES['files']['type'][$f];
 		$app->app_file_size = $_FILES['files']['size'][$f];
 		$app->app_seq_file = $seq;
