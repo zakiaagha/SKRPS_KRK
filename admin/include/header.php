@@ -24,7 +24,6 @@
               <!-- User image -->
               <li class="user-header">
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
                 <p>
                   <?php echo strtoupper($_SESSION['user_name']);?>
                   <small id="full" style="font-size: 14px;"><?php echo date("D, M d, Y H:i:s");?></small>

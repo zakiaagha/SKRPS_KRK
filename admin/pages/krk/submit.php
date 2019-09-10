@@ -72,37 +72,31 @@ if ($mode == 'status') {
 	# code...
 } elseif ($mode == 'unggah') {
 	$app_id = $_POST['app_id_unggah'];
-	foreach ($_FILES['files']['name'] as $f => $name) { 
-		/*
-	  	$seq++   ;
-		if ($_FILES['files']['error'][$f] == 4) {
-			continue; // Skip 
-		}	       
-		if ($_FILES['files']['error'][$f] == 0) {	           
-			if ($_FILES['files']['size'][$f] > $max_file_size) {
-		    	$message[] = "$name is too large!.";
-		        continue;
-			} elseif( ! in_array(pathinfo($name, PATHINFO_EXTENSION), $format_file) ) {
-				$message[] = "$name is not a valid format";
-				continue; 
-			} else {
-		  		if(move_uploaded_file($_FILES["files"]["tmp_name"][$f], $path.$name))
-		    	$count++;
-			}
-		}*/
-
-		$app->uid=$_SESSION['user_name'];
-		$app->datenow=date("Y-m-d H:i:s");
+	$seq=0;
+	foreach ($_FILES['files']['name'] as $f => $name) {
+		$seq++   ;	     
+		$name_file = $app_id."_".$name;
+		$app->app_id=$app_id;
 		$app->app_file_temp = $_FILES['files']['tmp_name'][$f];
-		$app->app_file_name = $_FILES['files']['name'][$f];
+		$app->app_file_name = $app->app_id."_".$_FILES['files']['name'][$f];
 		$app->app_file_type = $_FILES['files']['type'][$f];
 		$app->app_file_size = $_FILES['files']['size'][$f];
 		$app->app_seq_file = $seq;
-		$data = array(
-	                        "msg"     => $_FILES['files']['name'][$f],
-	                        "type"  => 'warning'
-	                    );
+		$app->uid=$_SESSION['user_name'];
+		$app->datenow=date("Y-m-d H:i:s");
+
+		if($app->insertImage() && move_uploaded_file($_FILES["files"]["tmp_name"][$f], $path.$name_file)){
+			$data = array(
+		                        "msg"     => 'unggah berhasil',
+		                        "type"  => 'warning'
+		                    );
+		} else {
+		    $data = array(
+		                        "msg"     => 'unggah gagal',
+		                        "type"  => 'danger'
+		                    );
+		}
+		echo json_encode($data);
 	}
-	echo json_encode($data);
 }
 ?>

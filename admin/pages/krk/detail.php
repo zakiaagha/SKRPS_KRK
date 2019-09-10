@@ -357,7 +357,7 @@ $stmt2=$app->readImage();
                               $active = '';
                             }
                             echo "<div class='item ".$active."'>";
-                            echo "<img src='images/".$row['app_image_name']."' alt='First slide'>";
+                            echo "<img src='upload/images/".$row['app_image_name']."' alt='First slide'>";
                             echo "</div>";
                             $no++;
                           } ?>
@@ -433,7 +433,7 @@ $stmt2=$app->readImage();
   function lihatPDF(name){
       var name = name;
       $('#pdf').modal('show');
-      $("#pdf_view").attr("src","upload/"+name);
+      $("#pdf_view").attr("src","upload/pdf/"+name);
     }
 </script>
 

@@ -1,12 +1,18 @@
 <?php
 include_once 'header.php';
+define('KB', 1024);
+define('MB', 1048576);
+define('GB', 1073741824);
+define('TB', 1099511627776);
 if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 	
 	include_once 'admin/include/application.inc.php';
+	include_once 'admin/include/config.php';
+	$config = new Config();
+	$db = $config->getConnection();
 	$app = new Application($db);
 
 	$format_file = array("zip", "pdf");
-	$max_file_size = 1024*(1024*5); 
 	$path = "admin/upload/"; 
 	$count = 0;
 	$app->app_name = $_POST['app_name'];
@@ -29,40 +35,46 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 	$app->uid=$_POST['app_name'];
 	$app->datenow=date("Y-m-d H:i:s");
 
-	if($app->insert()){
-	  $seq=0;
-	  foreach ($_FILES['files']['name'] as $f => $name) { 
-	  	$seq++   ;
-		if ($_FILES['files']['error'][$f] == 4) {
-			continue; // Skip 
-		}	       
-		if ($_FILES['files']['error'][$f] == 0) {	           
-			if ($_FILES['files']['size'][$f] > $max_file_size) {
-		    	$message[] = "$name is too large!.";
-		        continue;
-			} elseif( ! in_array(pathinfo($name, PATHINFO_EXTENSION), $format_file) ) {
-				$message[] = "$name is not a valid format";
-				continue; 
-			} else {
-				$name_file = $app->app_id."_".$name;
-		  		if(move_uploaded_file($_FILES["files"]["tmp_name"][$f], $path.$name_file))
-		    	$count++;
-			}
-		}
+	try{
+		$db->beginTransaction();
+		  $seq=0;
 
-		$app->app_file_temp = $_FILES['files']['tmp_name'][$f];
-		$app->app_file_name = $app->app_id."_".$_FILES['files']['name'][$f];
-		$app->app_file_type = $_FILES['files']['type'][$f];
-		$app->app_file_size = $_FILES['files']['size'][$f];
-		$app->app_seq_file = $seq;
-		$app->insertAttachment();
-	  }	
-      $_SESSION["errorType"] = "success";
-      $_SESSION["errorMsg"] = "Permohonan Baru Berhasil.";
-	} else {
-      $_SESSION["errorType"] = "gagal";
-      $_SESSION["errorMsg"] = "Permohonan Baru gagal.";
-	}
+		  foreach ($_FILES['files']['name'] as $f => $name) { 
+			$max_file_size = 5 * 1048576; 
+		  	$seq++   ;	       
+		  	if ($_FILES['files']['size'][$f] > $max_file_size) {
+				$_SESSION["errorType"] = "danger";
+			    $_SESSION["errorMsg"] = "File terlalu besar. Maksimal ukuran file 5Mb";
+			    break;
+			}			
+		  }	
+
+		  if ($_SESSION["errorType"] <> "danger"){
+		  	$app->insert();
+			foreach ($_FILES['files']['name'] as $f => $name) { 
+			  	$seq++   ;	       
+			  	$name_file = $app->app_id."_".$name;
+				$app->app_file_temp = $_FILES['files']['tmp_name'][$f];
+				$app->app_file_name = $app->app_id."_".$_FILES['files']['name'][$f];
+				$app->app_file_type = $_FILES['files']['type'][$f];
+				$app->app_file_size = $_FILES['files']['size'][$f];
+				$app->app_seq_file = $seq;
+				$app->insertAttachment();
+				if(move_uploaded_file($_FILES["files"]["tmp_name"][$f], $path.$name_file))
+				$count++;
+				$_SESSION["errorType"] = "success";
+		      	$_SESSION["errorMsg"] = "Permohonan Baru Berhasil.";
+			}
+		  }
+
+		  
+		$db->commit();
+	} catch (Exception $Ex) {
+      $db->rollBack();
+      $_SESSION["errorType"] = "danger";
+	  $_SESSION["errorMsg"] = $Ex->getMessage();
+    }
+
 }
 ?>
 
@@ -79,7 +91,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
         <div class="alert alert-<?php echo $_SESSION["errorType"] ?> alert-dismissable"><?php echo $_SESSION["errorMsg"]; ?></div>
     	<?php } ?><br>
         <div class="row">
-		  <div class="col-xs-12 col-sm-6 col-md-6">	
+		  <div class="col-xs-12 col-sm-7 col-md-7">	
           <form action="index.php?hal=permohonan_baru" method="post" enctype="multipart/form-data">	
 			<div class="form-group">
 				<label for="jm">Nama Pemohon</label>				    
@@ -138,15 +150,16 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 				<input type="text" class="form-control" id="app_building_allotment" name="app_building_allotment" autocomplete="off"> 
 			</div> 
 			<div class="form-group">
-				<input type="text" class="form-control" id="app_lat" name="app_lat" autocomplete="off" placeholder="Latitude" required> 
-			</div>
-			<div class="form-group">
-				<input type="text" class="form-control" id="app_long" name="app_long" autocomplete="off" placeholder="Longitude" required> 
-			<br>
-			    <div id="dvMap" style="width: auto; height: 300px">
+				<input type="hidden" class="form-control" id="app_lat" name="app_lat" autocomplete="off" placeholder="Latitude" required> 
+				<input type="hidden" class="form-control" id="app_long" name="app_long" autocomplete="off" placeholder="Longitude" required>
+				<div class="pac-card" id="pac-card">
+			      <br>
+			      <div id="pac-container">
+			        <input id="pac-input" type="text" placeholder="Masukkan Lokasi">
+			      </div>
 			    </div>
+				<div id="map" style="width: auto; height: 300px"></div>
 			</div>
-			<br>
 			<div class="form-group">
 				<label for="jm">KTP</label>	   
 				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
@@ -254,22 +267,95 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
     </section>
 
   </main>
-	<script type="text/javascript">
-		window.onload = function () {
-            var mapOptions = {
-                center: new google.maps.LatLng(1.128805, 104.054823),
-                zoom: 14,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var infoWindow = new google.maps.InfoWindow();
-            var latlngbounds = new google.maps.LatLngBounds();
-            var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
-            google.maps.event.addListener(map, 'click', function (e) {
-            	$("#app_lat").val(e.latLng.lat());
-            	$("#app_long").val(e.latLng.lng());/*
-                alert("Latitude: " + e.latLng.lat() + "\r\nLongitude: " + e.latLng.lng());*/
-            });
-        }
-	</script>
+  <script>
+      // This example requires the Places library. Include the libraries=places
+      // parameter when you first load the API. For example:
 
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr5dE6Rz99tbJzGSw5CaKIDXbT6Vvnzao&sensor=false" type="text/javascript"></script>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: {lat: 1.128805, lng: 104.054823},
+          mapTypeControl: true,
+          mapTypeControlOptions: {
+              style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+              position: google.maps.ControlPosition.TOP_RIGHT
+          },
+          zoomControl: true,
+        
+          scaleControl: true,
+          streetViewControl: true,
+      	  fullscreenControl: true
+        });
+        var card = document.getElementById('pac-card');
+        var input = document.getElementById('pac-input');
+        var types = document.getElementById('type-selector');
+        var strictBounds = document.getElementById('strict-bounds-selector');
+
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+
+        var autocomplete = new google.maps.places.Autocomplete(input);
+
+        // Bind the map's bounds (viewport) property to the autocomplete object,
+        // so that the autocomplete requests use the current map bounds for the
+        // bounds option in the request.
+        autocomplete.bindTo('bounds', map);
+
+        // Set the data fields to return when the user selects a place.
+        autocomplete.setFields(
+            ['address_components', 'geometry', 'icon', 'name']);
+
+        var infowindow = new google.maps.InfoWindow();
+        var infowindowContent = document.getElementById('infowindow-content');
+        infowindow.setContent(infowindowContent);
+        var marker = new google.maps.Marker({
+          map: map,
+          anchorPoint: new google.maps.Point(0, -29)
+        });
+
+        autocomplete.addListener('place_changed', function() {
+          infowindow.close();
+          marker.setVisible(false);
+          var place = autocomplete.getPlace();
+          /*if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+          }*/
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);  // Why 17? Because it looks good.
+          }
+          marker.setPosition(place.geometry.location);
+          marker.setVisible(true);
+
+          var address = '';
+          if (place.address_components) {
+            address = [
+              (place.address_components[0] && place.address_components[0].short_name || ''),
+              (place.address_components[1] && place.address_components[1].short_name || ''),
+              (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+          }
+
+          infowindowContent.children['place-icon'].src = place.icon;
+          infowindowContent.children['place-name'].textContent = place.name;
+          infowindowContent.children['place-address'].textContent = address;
+          infowindow.open(map, marker);
+        });
+
+        google.maps.event.addListener(map, 'click', function (e) {
+          marker.setPosition(e.latLng);
+          marker.setVisible(true);
+          $("#app_lat").val(e.latLng.lat());
+          $("#app_long").val(e.latLng.lng());
+        });
+      }
+    </script>
+
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr5dE6Rz99tbJzGSw5CaKIDXbT6Vvnzao&libraries=places&callback=initMap"
+        async defer></script>

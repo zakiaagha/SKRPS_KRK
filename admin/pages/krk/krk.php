@@ -76,11 +76,16 @@
                   <td><?php echo $row['app_owner_address']; ?></td>
                   <td><?php echo $row['app_land_area']; ?></td>
                   <td><b><?php echo $row['app_status']; ?></b></td>
-                  <td>
+                  <td style="line-height:35px;">
                   <?php 
                   if ($_SESSION['role_id'] == 1) {?>
                     <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Disetujui')">Setujui</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditunda')">Tolak</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Diterima')">Diterima</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-success" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditunda')">Tunda</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditolak')">Tolak</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-warning" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Batal')">Batal</a>
+                    <a style="cursor : pointer;" type="button" href="<?php echo "http://www.google.com/maps/place/".$row['app_lat'].",".$row['app_long']."/@".$row['app_lat'].",".$row['app_long'].",17z/data=!3m1!1e3".$row['app_status']; ?>" target="_blank" class="btn btn-sm btn-info" id="approve">Lokasi</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="unggah('<?php echo $row['idm_application'];?>','Unggah')">Unggah</a>
                     <?php if ($row['app_status'] == 'Disetujui') {
                     ?> 
                       <a style="cursor : pointer; color: #fff;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="cetak('<?php echo md5($row['idm_application']);?>')">Print</a>
@@ -91,7 +96,7 @@
                     <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditolak')">Tolak</a>
                     <a style="cursor : pointer;" type="button" class="btn btn-sm btn-warning" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Batal')">Batal</a>
                   <?php } elseif ($_SESSION['role_id'] == 3) {?>
-                    <a style="cursor : pointer;" type="button" href="<?php echo "http://www.google.com/maps/place/".$row['app_lat'].",".$row['app_long']."/@".$row['app_lat'].",".$row['app_long'].",17z/data=!3m1!1e3".$row['app_status']; ?>" target="_blank" class="btn btn-sm btn-warning" id="approve">Lokasi</a>
+                    <a style="cursor : pointer;" type="button" href="<?php echo "http://www.google.com/maps/place/".$row['app_lat'].",".$row['app_long']."/@".$row['app_lat'].",".$row['app_long'].",17z/data=!3m1!1e3".$row['app_status']; ?>" target="_blank" class="btn btn-sm btn-info" id="approve">Lokasi</a>
                     <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="unggah('<?php echo $row['idm_application'];?>','Unggah')">Unggah</a>
                   <?php }
                   ?>
@@ -138,7 +143,7 @@
     </div>
      <div class="modal" id="unggah">
       <form role="form" id="unggah-method" method="post">
-          <div class="modal-dialog modal-lg">
+          <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -146,8 +151,9 @@
                 <h4 class="modal-title">Unggah Foto Lokasi</h4>
               </div>
               <div class="modal-body"> 
-                  <embed src="upload/KTP.pdf"
-                               frameborder="0" width="100%" height="400px">
+                  <input type="hidden" id="app_id_unggah" name="app_id_unggah">
+                  <input type="hidden" id="mode_unggah" name="mode_unggah">
+                  <input type="file" class="form-control" id="files" name="files[]" multiple="multiple" accept="image/x-png,image/gif,image/jpeg" required>
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" style="width:90px;">Simpan</button>
@@ -179,17 +185,36 @@
 
        $('#unggah-method').submit(function(e){
           e.preventDefault();
-          var inputs = new FormData(this.form); 
-          alert(inputs);
-            $.post("pages/krk/submit.php", inputs, function(data){
-              $.bootstrapGrowl(data.msg,{
+          var form = $(this),
+          formData = new FormData();
+          formParams = form.serializeArray();
+
+          $.each(form.find('input[type="file"]'), function(i, tag) {
+            $.each($(tag)[0].files, function(i, file) {
+              formData.append(tag.name, file);
+            });
+          });
+
+          $.each(formParams, function(i, val) {
+            formData.append(val.name, val.value);
+          });
+
+          $.ajax({
+              type: "POST",
+              data: formData,
+              dataType: "json",
+              url: 'pages/krk/submit.php',
+              processData: false,
+              contentType: false,
+              success: function(data) {
+                $.bootstrapGrowl(data.msg,{
                      type: data.type,
                      delay: 2000,
                     }); 
-
-              $('#unggah').modal('hide');
-              $("#konten").load("pages/krk/krk.php");
-            },'json');
+                $('#unggah').modal('hide');
+                $("#konten").load("pages/krk/krk.php");
+              }
+          });
           });
 
       $('#data-krk').DataTable();

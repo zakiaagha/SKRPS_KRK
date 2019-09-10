@@ -1,12 +1,41 @@
 <?php
   session_start();
-  include_once ("../../include/login.inc.php");
+  include_once ("../../include/application.inc.php");
   include_once ("../../include/config.php");
   $config = new Config();
   $db = $config->getConnection();
+  
+  $status = $_POST['type'];
+  $period = $_POST['period'];
 
-  $user = new Login($db);
-  $stmt=$user->readAll();
+  if(empty($period)){
+    $start = date('d/m/Y');
+    $end = date('d/m/Y');
+    $period[0] = date('y-m-d');
+    $period[1] = date('y-m-d');
+  } else {
+    $start = date('d/m/Y', strtotime($period[0]));
+    $end = date('d/m/Y', strtotime($period[1]));
+  }
+
+
+  try {
+    if ($status == 'all') {
+      $sql = "SELECT * FROM krk_applications WHERE app_date BETWEEN :start_date AND :end_date";
+      $stmt = $db->prepare($sql);
+      $stmt->bindValue(':start_date', $period[0]);
+      $stmt->bindValue(':end_date', $period[1]);
+    } else {
+      $sql = "SELECT * FROM krk_applications WHERE app_status=:status AND app_date BETWEEN :start_date AND :end_date ";
+      $stmt = $db->prepare($sql);
+      $stmt->bindValue(':status', $status);
+      $stmt->bindValue(':start_date', $period[0]);
+      $stmt->bindValue(':end_date', $period[1]);
+    }
+    $stmt->execute();
+  } catch (Exception $e) {
+    echo $e->getMessage();
+  }
   ?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -24,7 +53,19 @@
             <div class="box-header bg-info" align="center">
               <div style="margin-top: 10px; margin-bottom: 10px;">
                 <div class="col-xs-1">
-                <span class="pull-right" style="margin-top: 5px;"> <b>Period :</b></span>
+                <span class="pull-right" style="margin-top: 5px;"> <b>Kategori:</b></span>
+                </div>
+                <div class="col-xs-2" align="left">
+                  <select class="form-control" id="type" name="type">
+                    <option value="all">All</option>
+                    <option value="disetujui">Disetujui</option>
+                    <option value="ditunda">Ditunda</option>
+                    <option value="ditolak">Ditolak</option>
+                    <option value="batal">Batal</option>                    
+                  </select>
+                </div>
+                <div class="col-xs-1">
+                <span class="pull-right" style="margin-top: 5px;"> <b>Period:</b></span>
                 </div>
                 <div class="col-xs-3" align="left">
                   <div class="input-group" style="margin-bottom: 10px;">
@@ -37,7 +78,6 @@
                   </div>
                 </div>
                 <div class="col-xs-1">
-                    <input type="hidden" name="var" id="var" value="<?php echo $var;?>">
                     <button type="button" class="btn btn-primary" id="filter">Submit</button>
                 </div>
                 <div class="col-xs-3 pull-right">
@@ -66,14 +106,21 @@
                 </tr> 
                 <tr align="center">
                   <td colspan="6">
-                     <center><span><b style="font-size: 18px;">Keterangan Rencana Kota (KRK)
-                    </b></span></center>
+                     <center><span><font style="font-size: 18px;">Keterangan Rencana Kota (KRK)
+                    </font></span></center>
                   </td>
                 </tr>   
                 <tr align="center">
                   <td colspan="6">
                      <center><font style="font-size: 14px;">
-                      Periode :
+                      Periode : 
+                      <?php 
+                    if (!empty($period[0]) && !empty($period[1])){
+
+                      echo $start.' s/d '.$end;
+                    } else {
+                      //echo date('d/m/Y').' s/d '.date('d/m/Y');
+                    }?>
                     </font></center>
                   </td>
                 </tr>   
@@ -84,69 +131,44 @@
             </div>
 
             <div>
-              <table style="font-size: 12px;" class="table table-bordered">
+              <table id="report-data" style="font-size: 12px;" class="table table-bordered">
               <tbody>
                 <tr style="background-color: #2c3b41; color: #fff;">
-                  <td style="text-align: center; vertical-align: middle;" width="10%"> <center><b>Nomor</b></center></td>
-                  <td style="text-align: center; vertical-align: middle;" width="10%"> <center><b>Nama</b></center></td>
-                  <td style="text-align: center; vertical-align: middle;" width="2%"> <center><b></b></center></td>
-                  <td style="text-align: center; vertical-align: middle;" width="5%"> <center><b></b></center></td>
-                  <td style="text-align: center; vertical-align: middle;" width="25%"> <center><b></b></center></td>
-                  <td style="text-align: center; vertical-align: middle;" width="100%"> <center><b></b></center></td>
-                  <td style="text-align: center; vertical-align: middle;" width="10%"> <center><b></b></center></td>
-                  <td style="text-align: center; vertical-align: middle;" width="10%"> <center><b></b></center></td>
+                  <td style="text-align: center; vertical-align: middle;" width="5%" rowspan="2"> <center><b>No</b></center></td>
+                  <td style="text-align: center; vertical-align: middle;" rowspan="2"> <center><b>Nama Pemohon</b></center></td>
+                  <td style="text-align: center; vertical-align: middle;" rowspan="2"> <center><b>Alamat</b></center></td>
+                  <td style="text-align: center; vertical-align: middle;" colspan="4"> <center><b>Lokasi</b></center></td>
+                  <td style="text-align: center; vertical-align: middle;" rowspan="2"> <center><b>No Sertifikat</b></center></td>
+                  <td style="text-align: center; vertical-align: middle;" rowspan="2"> <center><b>Ket</b></center></td>
                 </tr>
-                
-                  <!-- <?php 
-                  try {
-                    $total_debit = 0;
-                    $total_credit = 0;
-                    while($row=$data->fetch()){
-                      $total_debit += $row['debit'];
-                      $total_credit += $row['credit'];
-                      /*$sql1 = "SELECT td.td_seq_no as no, td.td_th_id as id, tt.trans_type_code, CONCAT(tt.trans_type_code, LPAD(th.th_project_no, 2, '0.00'), LPAD(th.th_investor_no, 2, '0.00')) as code, DATE_FORMAT(th.th_date, '%d/%m/%Y') as juornal_date, td.td_seq_no as no, coa.coa_code,coa.coa_name, td.td_drcr_flag AS drcr, IF(td.td_drcr_flag = 'D', td.td_amt, 0) as debit, IF(td.td_drcr_flag = 'C', td.td_amt, 0) as credit, td.td_desc from ft_trans_header as th
-                            JOIN ft_trans_detail td on th.idft_trans_header=td.td_th_id
-                            JOIN fm_trans_type as tt on tt.idfm_trans_type = th.th_type_id
-                            LEFT JOIN ft_payment_transaction pt ON pt.ft_pt_th_id = th.idft_trans_header
-                            LEFT JOIN fm_chart_of_account as coa on coa.idfm_chart_of_account = td.td_coa_id
-                            WHERE td.td_th_id = :th_id";
-                      $stmt1 = $DB->prepare($sql1);
-                      $stmt1->bindValue(':th_id', $row['id']);
-                      $stmt1->execute();*/
-                      ?>
-                          <tr>
-                            <td><b><center><?php echo $row['trans_txn_code'].str_pad($row['trans_no'], 6, 0, STR_PAD_LEFT);?></center></b></td>
-                            <td><b><?php echo date('d/m/Y', strtotime($row['juornal_date']));?></b></td>
-                            <td align="center"> <center><?php echo str_pad($row['no'],2,"0", STR_PAD_LEFT);?></center></td>     
-                            <td align="center"> <center><font style="color: #fff;">'</font><?php echo $row['coa_code'];?></center></td>     
-                            <td><?php echo $row['coa_name'];?></td>         
-                            <td><?php echo $row['td_desc'];?></td>         
-                            <td align="right"><?php echo number_format($row['debit'],2,',','.');?></td> 
-                            <td align="right"><?php echo number_format($row['credit'],2,',','.');?></td>
+                <tr style="background-color: #2c3b41; color: #fff;">
+                  <td style="text-align: center; vertical-align: middle;"> <center><b>Pemilik Tanah</b></center></td>
+                  <td style="text-align: center; vertical-align: middle;"> <center><b>Alamat Lokasi</b></center></td>
+                  <td style="text-align: center; vertical-align: middle;"> <center><b>No. PL</b></center></td>
+                  <td style="text-align: center; vertical-align: middle;"> <center><b>No. Setifikat</b></center></td>
+                </tr>
+                <?php
+                $no;
+                  while($row=$stmt->fetch()){
+                    $no++;
+                    $pmonth = GetRomawiFromNumber(date('m', strtotime($row['app_date'])));
+                    $pyear = date('Y', strtotime($row['app_date']));
+                    $month = GetRomawiFromNumber(date('m', strtotime($row['app_approve_date'])));
+                    $year = date('Y', strtotime($row['app_approve_date']));
+                ?>
+                    <tr>
+                            <td><b><center><?php echo $no;?></center></b></td>
+                            <td><?php echo $row['app_name'].'<br>'.$row['app_date'].'<br>'.str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/KRK/CKTR/".$pmonth."/".$pyear;?></td>
+                            <td align="center"> <center><?php echo $row['app_address'];?></center></td>     
+                            <td align="center"> <center><?php echo $row['app_owner_name'];?></center></td>     
+                            <td><?php echo $row['app_owner_address'];?></td>         
+                            <td><?php echo $row['app_pl_no'];?></td>         
+                            <td><?php echo $row['app_certificate_no'];?></td>   
+                            <td><?php echo str_pad($row['app_no'], 3, '0', STR_PAD_LEFT)."/KRK/CKTR/".$month."/".$year;?></td>         
+                            <td><?php echo $row['app_comment'];?></td>         
                           </tr>
-                        
-                        <?php
-                          
-                    }?>
-                      <tr>
-                        <td colspan="6" align="center">
-                          <center><b>Total</b></center>
-                        </td>
-                        <td align="right">
-                          <b><?php echo number_format($total_debit,2,',','.');?></b>
-                        </td>
-                        <td align="right">
-                          <b><?php echo number_format($total_credit,2,',','.');?></b>
-                        </td>
-                      </tr>
-                      <?php
-                    
-                  } catch (Exception $e) {
-                    $e->getMessage();
-                  }
-                  ?>
-                  
-                </tr> -->
+                <?php
+                  }?>
               </tbody>
             </table>
 
@@ -161,29 +183,47 @@
     </section> 
 
 <script>
-    $(window).scrollTop(0);
-    $("#add_user").click(function(){
-      $("#konten").load("pages/user/add.php");
-    });
-    $('#data-user').DataTable();
+  $(document).ready(function(){
+    var start = '<?php echo $start;?>';
+    var end = '<?php echo $end;?>';
 
-    function deleteUser(id){
-      var id =  id;
-      var mode = "delete";
-        $.post("pages/user/submit.php", {'id':id, 'mode':mode}, function(data){
-              $( "#konten" ).load( "pages/user/user.php", function() {
-                    $.bootstrapGrowl(data.msg,{
-                     type: data.type,
-                     delay: 2000,
-                    }); 
-                  });
-                
-            },'json');
-    }
-    function getDetail(id){
-      var id =  id;
-      $("#konten").load("pages/user/update.php", { 
-         'id': id
-        });
-    }
+    $("#filter").click(function(e){
+      e.preventDefault();
+      var start = $('#period').data('daterangepicker').startDate.format('YY-MM-DD');
+      var end =   $('#period').data('daterangepicker').endDate.format('YY-MM-DD');
+      var type = $('#type').val();
+      var period = new Array();
+      period[0] = start;
+      period[1] = end;
+      $("#konten").load("pages/report/report.php", {
+        "period": period,
+        "type": type
+      });
+    });
+
+    $(window).scrollTop(0);
+
+    $('#period').daterangepicker(
+      { startDate: start,
+        endDate: end,
+        ranges   : {
+          'Today'       : [moment(), moment()],
+          'This Month'  : [moment().startOf('month'), moment().endOf('month')]
+        },
+        locale: {
+          format: 'DD/MM/YYYY'
+        }
+      },
+      function (start, end) {
+        $('#period span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'))
+      }
+    );
+
+    $('#period span').html(moment(start, "DD/MM/YYYY").format('DD/MM/YYYY') + '  -  ' + moment(end, "DD/MM/YYYY").format('DD/MM/YYYY'));
+    
+   
+  });
+
+  $('#report-data').DataTable();
+    
 </script>

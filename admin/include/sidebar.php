@@ -10,8 +10,9 @@
         if ($_SESSION['role_id'] == 1) {?>
           <li id="user">
             <a id="user" href="user">
-              <i class="fa fa-user"></i> 
-              </i>Pengguna</a>
+              <i class="fa fa-user"></i>
+              <span>Pengguna</span>
+            </a>
           </li>
           <li id="krk">
             <a id="krk" href="krk">
@@ -45,8 +46,7 @@
               <span>Data KRK</span>
             </a>
           </li>
-        <?php }?>        
-            
+        <?php }?>      
       </ul>
     </section>
     <!-- /.sidebar -->
