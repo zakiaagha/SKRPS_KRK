@@ -58,10 +58,26 @@
                 <div class="col-xs-2" align="left">
                   <select class="form-control" id="type" name="type">
                     <option value="all">All</option>
-                    <option value="disetujui">Disetujui</option>
-                    <option value="ditunda">Ditunda</option>
-                    <option value="ditolak">Ditolak</option>
-                    <option value="batal">Batal</option>                    
+                    <option value="disetujui" 
+                    <?php if ( $status == 'disetujui') {
+                      echo 'selected';
+                    } ?>
+                    >Disetujui</option>
+                    <option value="ditunda"
+                    <?php if ( $status == 'ditunda') {
+                      echo 'selected';
+                    } ?>
+                    >Ditunda</option>
+                    <option value="ditolak"
+                    <?php if ( $status == 'ditolak') {
+                      echo 'selected';
+                    } ?>
+                    >Ditolak</option>
+                    <option value="batal"
+                    <?php if ( $status == 'batal') {
+                      echo 'selected';
+                    } ?>
+                    >Batal</option>                    
                   </select>
                 </div>
                 <div class="col-xs-1">
@@ -221,6 +237,15 @@
 
     $('#period span').html(moment(start, "DD/MM/YYYY").format('DD/MM/YYYY') + '  -  ' + moment(end, "DD/MM/YYYY").format('DD/MM/YYYY'));
     
+    $("#printExcel").click(function(e){
+      e.preventDefault();
+      var start = '<?php echo $period[0];?>';
+      var end = '<?php echo $period[1];?>';
+      var period = start+'s/d'+end;
+      var type = '<?php echo $status;?>';
+      alert(type);
+      window.open("pages/report/print_excel.php?period="+period+"&type="+type, '_blank');
+    });
    
   });
 
