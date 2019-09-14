@@ -40,7 +40,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
                 <thead>
                 <tr>
                   <th width="3%">No</th>
-                  <th>Nomor</th>
+                  <th>Nomor Permohonan</th>
                   <th>Tanggal</th>
                   <th>Nama Pemohon</th>
                   <th>Lokasi</th>
@@ -67,7 +67,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
                 ?>
                 <tr>
                   <td><?php echo $no; ?></td>
-                  <td><a style="cursor : pointer;" id="id_terms" onclick="getDetail('<?php echo $row['idm_application']?>')"><?php echo str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year; ?></a></td>
+                  <td><a style="cursor : pointer;" id="id_terms" onclick="getDetail('<?php echo $row['idm_application']?>')"><?php echo str_pad($row['app_req_no'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year; ?></a></td>
                   <td><?php echo $row['app_date']; ?></td>
                   <td><?php echo $row['app_name']; ?></td>
                   <td><?php echo $row['app_owner_address']; ?></td>

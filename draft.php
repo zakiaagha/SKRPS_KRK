@@ -7,7 +7,8 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
   
   $app = new Application($db);
   $app->app_nik = $_POST['app_nik'];
-  $stmt=$app->readByNik();
+  $app->app_req_no = $_POST['app_req_no'];
+  $stmt=$app->readByNikNo();
 }
 ?>
 
@@ -26,8 +27,11 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
       <div class="container">
         <form action="index.php?hal=draft_krk" method="post" enctype="multipart/form-data"> 
         <div class="row">
-          <div class="col-lg-4">
+          <div class="col-lg-2">
             <input type="text" class="form-control" id="app_nik" name="app_nik" autocomplete="off" placeholder="Masukkan NIK" required>
+          </div>
+          <div class="col-lg-2">
+            <input type="text" class="form-control" id="app_req_no" name="app_req_no" autocomplete="off" placeholder="No Permohonan" required>
           </div>
           <div class="col-lg-1">
             <button type="submit" class="btn btn-primary">Cari</button>
@@ -66,7 +70,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
                 ?>
                 <tr>
                   <td><?php echo $no; ?></td>
-                  <td><a style="cursor : pointer;" id="id_terms" onclick="getDetail('<?php echo $row['idm_application']?>')"><?php echo str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year; ?></a></td>
+                  <td><a style="cursor : pointer;" id="id_terms" onclick="getDetail('<?php echo $row['idm_application']?>')"><?php echo str_pad($row['app_no'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year; ?></a></td>
                   <td><?php echo $row['app_date']; ?></td>
                   <td><?php echo $row['app_name']; ?></td>
                   <td><?php echo $row['app_owner_address']; ?></td>

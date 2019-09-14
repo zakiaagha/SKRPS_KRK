@@ -138,6 +138,16 @@ class Application{
         return $stmt;
     }
 
+    function readByNikNo(){
+		$query = "SELECT * FROM ".$this->table_name." WHERE app_nik=? AND app_req_no=?";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(1, $this->app_nik);
+		$stmt->bindParam(2, $this->app_req_no);
+		$stmt->execute();
+        
+        return $stmt;
+    }
+
     function readOne(){		
 		$query = "SELECT * FROM ".$this->table_name." WHERE md5(idm_application)=?";
 		$stmt = $this->conn->prepare($query);
