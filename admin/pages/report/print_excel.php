@@ -190,7 +190,7 @@ while($row=$stmt->fetch()){
       
       $excel->getActiveSheet()->getStyle('H'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
-      $excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow, $row['app_comment']);
+      $excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow, $row['app_status']);
       $excel->getActiveSheet()->getStyle('I'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
       $excel->getActiveSheet()->getStyle('I'.$numrow)->getAlignment()->setWrapText(true);
         

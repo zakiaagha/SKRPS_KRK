@@ -351,6 +351,9 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
             map.setZoom(17);  // Why 17? Because it looks good.
           }
           marker.setPosition(place.geometry.location);
+
+          $("#app_lat").val(place.geometry.location.lat());
+          $("#app_long").val(place.geometry.location.lng());
           marker.setVisible(true);
 
           var address = '';

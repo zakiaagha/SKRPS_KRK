@@ -153,7 +153,7 @@
               <table id="report-data" style="font-size: 12px;" class="table table-bordered">
               <tbody>
                 <tr style="background-color: #2c3b41; color: #fff;">
-                  <td style="text-align: center; vertical-align: middle;" width="5%" rowspan="2"> <center><b>No</b></center></td>
+                  <td style="text-align: center; vertical-align: middle;" width="3%" rowspan="2"> <center><b>No</b></center></td>
                   <td style="text-align: center; vertical-align: middle;" rowspan="2"> <center><b>Nama Pemohon</b></center></td>
                   <td style="text-align: center; vertical-align: middle;" rowspan="2"> <center><b>Alamat</b></center></td>
                   <td style="text-align: center; vertical-align: middle;" colspan="4"> <center><b>Lokasi</b></center></td>
@@ -193,7 +193,7 @@
                                ?>
                                  
                                </td>         
-                            <td><?php echo $row['app_comment'];?></td>         
+                            <td><?php echo $row['app_status'];?></td>         
                           </tr>
                 <?php
                   }?>
