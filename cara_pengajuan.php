@@ -7,13 +7,12 @@
     <section id="about" class="wow fadeInUp">
       <div class="container">
         <div class="row">
+        	<div class="col-lg-2"></div>
+        	<div class="col-lg-8 about-img"><br>
+            	<img src="img/flow.png" alt="">
+          	</div>
+        	<div class="col-lg-2"></div>
         </div>
-      </div>
-    </section>
-    <section id="call-to-action" class="wow fadeInUp">
-      <div class="container">
-    
-
       </div>
     </section>
 

@@ -133,7 +133,7 @@ $pdf->Cell($pdf->getPageWidth(), 6, '                                           
 
 $pdf->ln(5);
 $pdf->SetFont('bookantiqua', '', 10);
-$pdf->Cell($pdf->getPageWidth(), 6, 'Nomor : '.$app->app_id.'/KRK/CKTR/'.$month.'/'.$year, 0, '', 'C', 0, '', 0, false, 'C', 'C');
+$pdf->Cell($pdf->getPageWidth(), 6, 'Nomor : '.$app->app_no.'/KRK/CKTR/'.$month.'/'.$year, 0, '', 'C', 0, '', 0, false, 'C', 'C');
 
 $pdf->ln();
 $pdf->SetFont('bookantiqua', '', 10);
@@ -180,7 +180,7 @@ $pdf->SetXY(20, $y+6);
 $pdf->Cell(40, 7, '5. Nomor Permohonan', 0, '', 'L', 0, '', 0, false, 'C', 'C');
 $pdf->Cell(5, 7, ':', 0, '', 'L', 0, '', 0, false, 'C', 'C');
 $pdf->SetXY(65,$y+4);
-$pdf->MultiCell(147, 7, $app->app_id.'/KRK/CKTR/'.$month.'/'.$year,0,'L',0,0);$pdf->ln();
+$pdf->MultiCell(147, 7, $app->app_no.'/KRK/CKTR/'.$month.'/'.$year,0,'L',0,0);$pdf->ln();
 $y = $pdf->getY();
 $pdf->SetXY(20, $y);
 $pdf->Cell(40, 7, '    Nama Pemohon', 0, '', 'L', 0, '', 0, false, 'C', 'C');

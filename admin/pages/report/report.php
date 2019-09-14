@@ -4,8 +4,11 @@
   include_once ("../../include/config.php");
   $config = new Config();
   $db = $config->getConnection();
-  
-  $status = $_POST['type'];
+  if ($_POST['type'] == '') {
+    $status = 'all';
+  } else {
+    $status = $_POST['type'];
+  }
   $period = $_POST['period'];
 
   if(empty($period)){
@@ -97,9 +100,9 @@
                     <button type="button" class="btn btn-primary" id="filter">Submit</button>
                 </div>
                 <div class="col-xs-3 pull-right">
-                  <div class="btn-group">
+                  <!-- div class="btn-group">
                       <button type="button" class="btn btn-primary" id="print_journal"><i class="fa fa-print"></i>&emsp;Print&nbsp;&nbsp;</button>
-                  </div>                  
+                  </div>   -->                
                   <div class="btn-group pull-right">
                       <button type="button" class="btn btn-primary" id="printExcel"><i class="fa fa-file-excel-o"></i>&emsp;Export Excel</button>
                   </div>
@@ -169,8 +172,8 @@
                     $no++;
                     $pmonth = GetRomawiFromNumber(date('m', strtotime($row['app_date'])));
                     $pyear = date('Y', strtotime($row['app_date']));
-                    $month = GetRomawiFromNumber(date('m', strtotime($row['app_approve_date'])));
-                    $year = date('Y', strtotime($row['app_approve_date']));
+                    $month = GetRomawiFromNumber(date('m', strtotime($row['app_end_date'])));
+                    $year = date('Y', strtotime($row['app_end_date']));
                 ?>
                     <tr>
                             <td><b><center><?php echo $no;?></center></b></td>
@@ -180,7 +183,16 @@
                             <td><?php echo $row['app_owner_address'];?></td>         
                             <td><?php echo $row['app_pl_no'];?></td>         
                             <td><?php echo $row['app_certificate_no'];?></td>   
-                            <td><?php echo str_pad($row['app_no'], 3, '0', STR_PAD_LEFT)."/KRK/CKTR/".$month."/".$year;?></td>         
+                            <td>
+                              <?php
+                              if ($row['app_no'] == 0) {
+                                # code...
+                              } else {
+                                echo str_pad($row['app_no'], 3, '0', STR_PAD_LEFT)."/KRK/CKTR/".$month."/".$year;
+                              }
+                               ?>
+                                 
+                               </td>         
                             <td><?php echo $row['app_comment'];?></td>         
                           </tr>
                 <?php
@@ -243,7 +255,6 @@
       var end = '<?php echo $period[1];?>';
       var period = start+'s/d'+end;
       var type = '<?php echo $status;?>';
-      alert(type);
       window.open("pages/report/print_excel.php?period="+period+"&type="+type, '_blank');
     });
    

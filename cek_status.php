@@ -46,6 +46,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
                   <th>Lokasi</th>
                   <th>Status</th>
                   <th>Keterangan</th>
+                  <th>Opsi</th>
               
                 </tr>
                 </thead>
@@ -84,6 +85,12 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
                   }
                    echo "<b style='color:".$color."'>".$row['app_status']."</b>"; ?></td>
                   <td><?php echo $row['app_comment']; ?></td>
+                  <td>
+                    <?php 
+                    if ($row['app_status'] == 'Ditunda') {
+                      echo "<a style='cursor : pointer; color: #fff;' type='button' class='btn btn-sm btn-primary' id='edit' href='index.php?hal=ubah&id=".$row['idm_application']."')'>Edit</a>";
+                    } ?>
+                  </td>
                 </tr>
                 <?php
                 }

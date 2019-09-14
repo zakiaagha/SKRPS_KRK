@@ -9,9 +9,12 @@ class Application{
 	public $id;
 	public $app_id;
 	public $app_name;
+	public $app_no;
+	public $app_req_no;
 	public $app_address;
 	public $app_nik;
 	public $app_date;
+	public $app_end_date;
 	public $app_telepon;
 	public $app_lat;
 	public $app_long;
@@ -52,7 +55,7 @@ class Application{
 	}
 
 	function insert(){
-		$query = "insert into ".$this->table_name." (app_name, app_nik, app_address, app_telepon, app_owner_name, app_owner_address, app_land_area, app_proposed_land_area, app_certificate_no, app_pl_no, app_allotment_perpres, app_allotment_prov, app_building_allotment, app_imb_no, app_date, app_lat, app_long, app_cr_uid, app_cr_dt) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		$query = "insert into ".$this->table_name." (app_name, app_nik, app_address, app_telepon, app_owner_name, app_owner_address, app_land_area, app_proposed_land_area, app_certificate_no, app_pl_no, app_allotment_perpres, app_allotment_prov, app_building_allotment, app_imb_no, app_date, app_lat, app_long, app_cr_uid, app_cr_dt, app_comment, app_req_no) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->app_name);
 		$stmt->bindParam(2, $this->app_nik);
@@ -73,6 +76,8 @@ class Application{
 		$stmt->bindParam(17, $this->app_long);
 		$stmt->bindParam(18, $this->app_name);
 		$stmt->bindParam(19, $this->datenow);
+		$stmt->bindParam(20, $this->app_comment);
+		$stmt->bindParam(21, $this->app_req_no);
 		
 		if($stmt->execute()){
 			$this->app_id = $this->conn->lastInsertId();
@@ -146,6 +151,9 @@ class Application{
 		$this->app_address = $row['app_address'];
 		$this->app_nik = $row['app_nik'];
 		$this->app_date = $row['app_date'];
+		$this->app_no = $row['app_no'];
+		$this->app_req_no = $row['app_req_no'];
+		$this->app_end_date = $row['app_end_date'];
 		$this->app_telepon = $row['app_telepon'];
 		$this->app_lat = $row['app_lat'];
 		$this->app_long = $row['app_long'];
@@ -229,6 +237,37 @@ class Application{
 		}
     }
 
+    function update2(){
+		$query = "UPDATE ".$this->table_name."
+				  SET app_name=?, app_nik=?, app_address=?, app_telepon=?, app_owner_name=?, app_owner_address=?, app_land_area=?, app_proposed_land_area=?, app_certificate_no=?, app_pl_no=?, app_imb_no=?, app_allotment_perpres=?, app_allotment_prov=?, app_building_allotment=?, app_lat=?, app_long=?, app_status='', app_comment='Berkas sudah dilengkapi oleh pemohon', app_upd_uid=?, app_upd_dt=?
+				  WHERE idm_application = ?";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(1, $this->app_name);
+		$stmt->bindParam(2, $this->app_nik);
+		$stmt->bindParam(3, $this->app_address);
+		$stmt->bindParam(4, $this->app_telepon);
+		$stmt->bindParam(5, $this->app_owner_name);
+		$stmt->bindParam(6, $this->app_owner_address);
+		$stmt->bindParam(7, $this->app_land_area);
+		$stmt->bindParam(8, $this->app_proposed_land_area);
+		$stmt->bindParam(9, $this->app_certificate_no);
+		$stmt->bindParam(10, $this->app_pl_no);
+		$stmt->bindParam(11, $this->app_imb_no);
+		$stmt->bindParam(12, $this->app_allotment_perpres);
+		$stmt->bindParam(13, $this->app_allotment_prov);
+		$stmt->bindParam(14, $this->app_building_allotment);
+		$stmt->bindParam(15, $this->app_lat);
+		$stmt->bindParam(16, $this->app_long);
+		$stmt->bindParam(17, $this->uid);
+		$stmt->bindParam(18, $this->datenow);
+		$stmt->bindParam(19, $this->app_id);
+		
+		if($stmt->execute()){
+			return true;
+		}else{
+			return false;
+		}
+    }
     function updateStatus(){
 		$query = "UPDATE ".$this->table_name."
 				  SET app_status=?, app_comment=?, app_upd_uid=?, app_upd_dt=?
@@ -239,6 +278,26 @@ class Application{
 		$stmt->bindParam(3, $this->uid);
 		$stmt->bindParam(4, $this->datenow);
 		$stmt->bindParam(5, $this->app_id);
+		
+		if($stmt->execute()){
+			return true;
+		}else{
+			return false;
+		}
+    }
+
+    function updateStatus2(){
+		$query = "UPDATE ".$this->table_name."
+				  SET app_status=?, app_comment=?, app_end_date=?, app_no=?, app_upd_uid=?, app_upd_dt=?
+				  WHERE idm_application = ?";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(1, $this->app_status);
+		$stmt->bindParam(2, $this->app_comment);
+		$stmt->bindParam(3, $this->app_end_date);
+		$stmt->bindParam(4, $this->app_no);
+		$stmt->bindParam(5, $this->uid);
+		$stmt->bindParam(6, $this->datenow);
+		$stmt->bindParam(7, $this->app_id);
 		
 		if($stmt->execute()){
 			return true;

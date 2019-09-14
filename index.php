@@ -16,6 +16,8 @@ if ($hal == 'cara_pengajuan') {
   include 'draft.php';
 } elseif ($hal == 'draft_krk') {
   include 'cetak_draft.php';
+} elseif ($hal == 'ubah') {
+  include 'permohonan_ubah.php';
 } else {
   include 'intro.php';
   include 'main.php';

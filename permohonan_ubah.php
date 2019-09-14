@@ -1,32 +1,36 @@
 <?php
 include_once 'header.php';
+session_start();	
+include_once 'admin/include/application.inc.php';
+include_once 'admin/include/config.php';
+if (isset($_GET)) {
+  $id=md5($_GET['id']);
+  $app_id=$_GET['id'];
+}
+$app = new Application($db);
+$app->id = $id;
+$app->readOne();
+$month = GetRomawiFromNumber(date('m', strtotime($app->app_date)));
+$year = date('Y', strtotime($app->app_date));
+
+$stmt1=$app->readAttachment();
+
 define('KB', 1024);
 define('MB', 1048576);
 define('GB', 1073741824);
 define('TB', 1099511627776);
+
 if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
-	
-	include_once 'admin/include/application.inc.php';
-	include_once 'admin/include/config.php';
 	$config = new Config();
 	$db = $config->getConnection();
 	$app = new Application($db);
-	
-	$sql = "SELECT max(app_req_no) as no FROM krk_applications WHERE YEAR(app_date) = YEAR(CURDATE());";
-	$stmt = $db->prepare($sql);
-    $stmt->execute();
-    $no = $stmt->fetch();
-    if ($no['no'] == ''){
-    	$req_no = '1';
-    } else {
-    	$req_no = $no['no']+1;
-    }
 
 	$format_file = array("zip", "pdf");
 	$path = "admin/upload/pdf/"; 
 	$count = 0;
+
+  $app->app_id = $_POST['app_id'];
 	$app->app_name = $_POST['app_name'];
-	$app->app_req_no = $req_no;
 	$app->app_address = $_POST['app_address'];
 	$app->app_nik = $_POST['app_nik'];
 	$app->app_telepon = $_POST['app_telepon'];
@@ -49,11 +53,8 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 
 	try{
 		$db->beginTransaction();
-		  $seq=0;
-
 		  foreach ($_FILES['files']['name'] as $f => $name) { 
-			$max_file_size = 5 * 1048576; 
-		  	$seq++   ;	       
+			  $max_file_size = 5 * 1048576; 
 		  	if ($_FILES['files']['size'][$f] > $max_file_size) {
 				$_SESSION["errorType"] = "danger";
 			    $_SESSION["errorMsg"] = "File terlalu besar. Maksimal ukuran file 5Mb";
@@ -62,31 +63,41 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 		  }	
 
 		  if ($_SESSION["errorType"] <> "danger"){
-		  	$app->insert();
-			foreach ($_FILES['files']['name'] as $f => $name) { 
-			  	$seq++   ;	       
-			  	$name_file = $app->app_id."_".$name;
-				$app->app_file_temp = $_FILES['files']['tmp_name'][$f];
-				$app->app_file_name = $app->app_id."_".$_FILES['files']['name'][$f];
-				$app->app_file_type = $_FILES['files']['type'][$f];
-				$app->app_file_size = $_FILES['files']['size'][$f];
-				$app->app_seq_file = $seq;
-				$app->insertAttachment();
-				if(move_uploaded_file($_FILES["files"]["tmp_name"][$f], $path.$name_file))
-				$count++;
-				$_SESSION["errorType"] = "success";
-		      	$_SESSION["errorMsg"] = "Permohonan Baru Berhasil.";
-			}
-		  }
+		  	$app->update2();
+        $sql = "SELECT max(app_attach_seq) as no FROM krk_applications_attachment WHERE app_attach_id = ?";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(1, $app->app_id);
+        $stmt->execute();
+        $no = $stmt->fetch();
+        if ($no['no'] == ''){
+          $seq=0;
+        } else {
+          $seq= $no['no'];
+        }
+  			foreach ($_FILES['files']['name'] as $f => $name) { 
+  			  	$seq++   ;	       
+  			  	$name_file = $app->app_id."_".$name;
+  				$app->app_file_temp = $_FILES['files']['tmp_name'][$f];
+  				$app->app_file_name = $app->app_id."_".$_FILES['files']['name'][$f];
+  				$app->app_file_type = $_FILES['files']['type'][$f];
+  				$app->app_file_size = $_FILES['files']['size'][$f];
+  				$app->app_seq_file = $seq;
+  				$app->insertAttachment();
+  				if(move_uploaded_file($_FILES["files"]["tmp_name"][$f], $path.$name_file))
+  				$count++;
+  				$_SESSION["errorType"] = "success";
+  		      	$_SESSION["errorMsg"] = "Ubah Data Permohonan Berhasil.";
+  			}
+		  }		  
 		$db->commit();
 	} catch (Exception $Ex) {
       $db->rollBack();
       $_SESSION["errorType"] = "danger";
 	  $_SESSION["errorMsg"] = $Ex->getMessage();
     }
-
 }
 ?>
+
   <main id="main">
     <section id="call-to-action">
       <div class="container">
@@ -101,77 +112,67 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
     	<?php } ?><br>
         <div class="row">
 		  <div class="col-xs-12 col-sm-7 col-md-7">	
-          <form action="index.php?hal=permohonan_baru" method="post" enctype="multipart/form-data">	
+          <form action="index.php?hal=ubah" method="post" enctype="multipart/form-data">	
 			<div class="form-group">
-				<label for="jm">Nama Pemohon</label>	
-				<?php			    
-				 $sql = "SELECT max(app_req_no) as no FROM krk_applications WHERE YEAR(app_date) = YEAR(CURDATE());";
-				 $stmt = $db->prepare($sql);
-                 $stmt->execute();
-                 $no = $stmt->fetch();
-                 if ($no['no'] == ''){
-                 	$req_no = '1';
-                 } else {
-                 	$req_no = $no['no']+1;
-                 }
-				?>
-				<input type="text" class="form-control" id="app_name" name="app_name" autocomplete="off" required>
+				<label for="jm">Nama Pemohon</label>	         
+        <input type="hidden" class="form-control" id="app_id" name="app_id" autocomplete="off" value="<?php echo $app_id;?>" required>         
+        <input type="text" class="form-control" id="app_name" name="app_name" autocomplete="off" value="<?php echo $app->app_name;?>" required>
 			</div>
 			<div class="form-group">
 				<label for="jm">NIK</label>				    
-				<input type="text" class="form-control" id="app_nik" name="app_nik" autocomplete="off" required>
+				<input type="text" class="form-control" id="app_nik" name="app_nik" autocomplete="off" value="<?php echo $app->app_nik;?>" required>
 			</div>
 			<div class="form-group">
 				<label for="jm">Alamat Pemohon</label>			
-				<textarea type="text" class="form-control" id="app_address" name="app_address" autocomplete="off" required></textarea>	 
+				<textarea type="text" class="form-control" id="app_address" name="app_address" autocomplete="off" required><?php echo $app->app_address;?></textarea>	 
 			</div>
 			<div class="form-group">
 				<label for="jm">No HP</label>			
-				<input type="Number" class="form-control" id="app_telepon" name="app_telepon" autocomplete="off" required>   
+				<input type="Number" class="form-control" id="app_telepon" name="app_telepon" autocomplete="off" value="<?php echo $app->app_telepon;?>" required>   
 			</div>
 			<div class="form-group">
 				<label for="jm">Atas Nama/Pemilik Tanah</label>				    
-				<input type="text" class="form-control" id="app_owner_name" name="app_owner_name" autocomplete="off" required>
+				<input type="text" class="form-control" id="app_owner_name" name="app_owner_name" autocomplete="off" value="<?php echo $app->app_owner_name;?>" required>
 			</div>
 			<div class="form-group">
 				<label for="jm">Alamat Lokasi</label>	    
-				<textarea type="text" class="form-control" id="app_owner_address" name="app_owner_address" autocomplete="off" required></textarea>	
+				<textarea type="text" class="form-control" id="app_owner_address" name="app_owner_address" autocomplete="off" required><?php echo $app->app_owner_address;?></textarea>	
 			</div>  
 			<div class="form-group">
 				<label for="jm">Luas Lahan</label>	    
-				<input type="text" class="form-control" id="app_land_area" name="app_land_area" autocomplete="off" required> 
+				<input type="text" class="form-control" id="app_land_area" name="app_land_area" autocomplete="off" value="<?php echo $app->app_land_area;?>" required> 
 			</div> 
 			<div class="form-group">
 				<label for="jm">Luas Lahan Permohonan</label>	    
-				<input type="text" class="form-control" id="app_proposed_land_area" name="app_proposed_land_area" autocomplete="off" required> 
+				<input type="text" class="form-control" id="app_proposed_land_area" name="app_proposed_land_area" value="<?php echo $app->app_proposed_land_area;?>" autocomplete="off" required> 
 			</div>   
 			<div class="form-group">
 				<label for="jm">No. Sertifikat</label>	    
-				<input type="text" class="form-control" id="app_certificate_no" name="app_certificate_no" autocomplete="off" required> 
+				<input type="text" class="form-control" id="app_certificate_no" name="app_certificate_no" autocomplete="off" value="<?php echo $app->app_certificate_no;?>" required> 
 			</div>  
 			<div class="form-group">
 				<label for="jm">No. PL</label>	    
-				<input type="text" class="form-control" id="app_pl_no" name="app_pl_no" autocomplete="off" required> 
+				<input type="text" class="form-control" id="app_pl_no" name="app_pl_no" autocomplete="off" value="<?php echo $app->app_pl_no;?>" required> 
 			</div>  
 			<div class="form-group">
 				<label for="jm">No. IMB</label>	    
-				<input type="text" class="form-control" id="app_imb_no" name="app_imb_no" autocomplete="off"> 
+				<input type="text" class="form-control" id="app_imb_no" name="app_imb_no" autocomplete="off" value="<?php echo $app->app_imb_no;?>"> 
 			</div>  
 			<div class="form-group">
 				<label for="jm">Peruntukan Lahan Perpres 87/2011</label>	    
-				<input type="text" class="form-control" id="app_allotment_perpres" name="app_allotment_perpres" autocomplete="off"> 
+				<input type="text" class="form-control" id="app_allotment_perpres" name="app_allotment_perpres" autocomplete="off" value="<?php echo $app->app_allotment_perpres;?>"> 
 			</div> 
 			<div class="form-group">
 				<label for="jm">Peruntukan Lahan Prov. Kepri 1/2017</label>	    
-				<input type="text" class="form-control" id="app_allotment_prov" name="app_allotment_prov" autocomplete="off"> 
+				<input type="text" class="form-control" id="app_allotment_prov" name="app_allotment_prov" autocomplete="off" value="<?php echo $app->app_allotment_prov;?>"> 
 			</div> 
 			<div class="form-group">
 				<label for="jm">Peruntukan Bangunan</label>	    
-				<input type="text" class="form-control" id="app_building_allotment" name="app_building_allotment" autocomplete="off"> 
+				<input type="text" class="form-control" id="app_building_allotment" name="app_building_allotment" autocomplete="off" value="<?php echo $app->app_building_allotment;?>" required> 
 			</div> 
 			<div class="form-group">
-				<input type="hidden" class="form-control" id="app_lat" name="app_lat" autocomplete="off" placeholder="Latitude" required> 
-				<input type="hidden" class="form-control" id="app_long" name="app_long" autocomplete="off" placeholder="Longitude" required>
+				<input type="hidden" class="form-control" id="app_lat" name="app_lat" autocomplete="off" value="<?php echo $app->app_lat;?>" placeholder="Latitude" required> 
+				<input type="hidden" class="form-control" id="app_long" name="app_long" autocomplete="off" value="<?php echo $app->app_long;?>" placeholder="Longitude" required>
 				<div class="pac-card" id="pac-card">
 			      <br>
 			      <div id="pac-container">
@@ -179,55 +180,10 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 			      </div>
 			    </div>
 				<div id="map" style="width: auto; height: 300px"></div>
-			</div>
-			<div class="form-group">
-				<label for="jm">KTP</label>	   
-				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
-				<small>&nbsp;* file format PDF. Maximum upload file size 5Mb.</small>
-			</div>
-			<div class="form-group">
-				<label for="jm">Peruntukan Lahan</label>	   
-				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
-				<small>&nbsp;* file format PDF. Maximum upload file size 5Mb.</small>
-			</div>
-			<div class="form-group">
-				<label for="jm">Sertifikat</label>	   
-				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
-				<small>&nbsp;* file format PDF. Maximum upload file size 5Mb.</small>
-			</div>
-			<div class="form-group">
-				<label for="jm">Akte Notaris</label>	   
-				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
-				<small>&nbsp;* file format PDF. Maximum upload file size 5Mb.</small>
-			</div>
-			<div class="form-group">
-				<label for="jm">Bukti Lunas Pajak Bumi dan Bangunan (PBB)</label>	   
-				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
-				<small>&nbsp;* file format PDF. Maximum upload file size 5Mb.</small>
-			</div>
-			<div class="form-group">
-				<label for="jm">Surat izin bekerja perencana (SIBP)</label>	   
-				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
-				<small>&nbsp;* file format PDF. Maximum upload file size 5Mb.</small>
-			</div>
-			<div class="form-group">
-				<label for="jm">Surat Pernyataan Keabsahan Dokumen</label>	   
-				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
-				<small>&nbsp;* file format PDF. Maximum upload file size 5Mb.</small>
-			</div>			
-			<div class="form-group">
-				<label for="jm">Surat Kuasa</label>	   
-				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
-				<small>&nbsp;* file format PDF. Maximum upload file size 5Mb.</small>
-			</div>
-			<div class="form-group">
-				<label for="jm">Izin Mendirikan Bangunan (IMB)</label>	   
-				<input type="file" class="form-control" id="file" name="files[]" accept="application/pdf" required>
-				<small>&nbsp;* file format PDF. Maximum upload file size 5Mb.</small>
 			</div>	
 			<div class="form-group">
-				<label for="jm">Berkas Lainnya</label>	   
-				<input type="file" class="form-control" id="file" name="files[]" multiple="multiple" accept="application/pdf">
+				<label for="jm">Berkas</label>	   
+				<input type="file" class="form-control" id="file" name="files[]" multiple="multiple" accept="application/pdf" required>
 				<small>&nbsp;* file format PDF. Maximum upload file size 5Mb.</small>
 			</div>
 			<br>
@@ -290,8 +246,21 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
   <script>
       // This example requires the Places library. Include the libraries=places
       // parameter when you first load the API. For example:
+      var app_lat = '<?php echo $app->app_lat;?>';
+      var app_long = '<?php echo $app->app_long;?>';
+      var app_title = '<?php echo $app->app_owner_name;?>';
+      var app_desc = '<?php echo $app->app_owner_address;?>';
+      mark = [
+    {
+        "title": app_owner_name,
+        "lat": app_lat,
+        "lng": app_long,
+        "description": app_owner_address
+    }
+    ];
 
       function initMap() {
+ 
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 12,
           center: {lat: 1.128805, lng: 104.054823},
@@ -327,9 +296,11 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
         var infowindow = new google.maps.InfoWindow();
         var infowindowContent = document.getElementById('infowindow-content');
         infowindow.setContent(infowindowContent);
+        var data = mark[0];
+		var myLatlng = new google.maps.LatLng(data.lat, data.lng);
         var marker = new google.maps.Marker({
-          map: map,
-          anchorPoint: new google.maps.Point(0, -29)
+    	  position: myLatLng,
+          map: map
         });
 
         autocomplete.addListener('place_changed', function() {

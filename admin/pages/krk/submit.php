@@ -11,7 +11,7 @@ $app_id = $_POST['app_id'];
 $mode = isset($_POST['mode']) ? $_POST['mode'] : $_POST['mode_unggah'];
 $app_komentar = $_POST['app_komentar'];
 $status = $_POST['type'];
-$path = "../../upload/"; 
+$path = "../../upload/images/"; 
 
 if ($mode == 'status') {
 	$app->app_status=$status;
@@ -19,18 +19,47 @@ if ($mode == 'status') {
 	$app->app_id=$app_id;
 	$app->uid=$_SESSION['user_name'];
 	$app->datenow=date("Y-m-d H:i:s");
+	$app->app_end_date=date("Y-m-d");
 
-	if($app->updateStatus()){
-		$data = array(
-	                        "msg"     => 'Verifikasi berhasil',
-	                        "type"  => 'warning'
-	                    );
+	$sql = "SELECT max(app_no) as no FROM krk_applications WHERE YEAR(app_date) = YEAR(CURDATE());";
+	$stmt = $db->prepare($sql);
+    $stmt->execute();
+    $no = $stmt->fetch();
+    if ($no['no'] == ''){
+    	$req_no = '1';
+    } else {
+    	$req_no = $no['no']+1;
+    }
+
+	$app->app_no=$req_no;
+
+	if ($status == 'Disetujui' || $status == 'Ditolak') {
+		if($app->updateStatus2()){
+			$data = array(
+		                        "msg"     => 'Verifikasi berhasil',
+		                        "type"  => 'warning'
+		                    );
+		} else {
+		    $data = array(
+		                        "msg"     => 'Verifikasi gagal',
+		                        "type"  => 'danger'
+		                    );
+		}
 	} else {
-	    $data = array(
-	                        "msg"     => 'Verifikasi gagal',
-	                        "type"  => 'danger'
-	                    );
+		if($app->updateStatus()){
+			$data = array(
+		                        "msg"     => 'Verifikasi berhasil',
+		                        "type"  => 'warning'
+		                    );
+		} else {
+		    $data = array(
+		                        "msg"     => 'Verifikasi gagal',
+		                        "type"  => 'danger'
+		                    );
+		}
 	}
+
+	
 	echo json_encode($data);
 } elseif ($mode == 'update') {
 	$app->app_id=$app_id;

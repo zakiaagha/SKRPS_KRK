@@ -37,6 +37,7 @@
                   <th>Lokasi</th>
                   <th>Luas Lahan</th>
                   <th>Status</th>
+                  <th>Keterangan</th>
                   <th 
                   <?php 
 
@@ -65,9 +66,9 @@
                     <?php 
 
                     if ($_SESSION['role_id'] == 3) {
-                      echo str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year;
+                      echo str_pad($row['app_req_no'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year;
                     } else {
-                      echo "<a style='cursor : pointer;' id='id_terms' onclick='getDetail(".$row['idm_application'].")'>".str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year."</a>";
+                      echo "<a style='cursor : pointer;' id='id_terms' onclick='getDetail(".$row['idm_application'].")'>".str_pad($row['app_req_no'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$month."/".$year."</a>";
                     } 
                     ?>
                   </td>
@@ -76,29 +77,39 @@
                   <td><?php echo $row['app_owner_address']; ?></td>
                   <td><?php echo $row['app_land_area']; ?></td>
                   <td><b><?php echo $row['app_status']; ?></b></td>
+                  <td><?php echo $row['app_comment']; ?></td>
                   <td style="line-height:35px;">
                   <?php 
+                  if ($row['app_status'] == 'Disetujui') {
+                    if ($_SESSION['role_id']=='1') {
+                    ?>
+                      <a style="cursor : pointer; color: #fff;" type="button" class="btn btn-sm btn-primary" onclick="cetak('<?php echo md5($row['idm_application']);?>')">Print</a>
+                   
+                    <?php }
+                    
+                  } else {
                   if ($_SESSION['role_id'] == 1) {?>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Disetujui')">Setujui</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Diterima')">Diterima</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-success" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditunda')">Tunda</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditolak')">Tolak</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-warning" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Batal')">Batal</a>
-                    <a style="cursor : pointer;" type="button" href="<?php echo "http://www.google.com/maps/place/".$row['app_lat'].",".$row['app_long']."/@".$row['app_lat'].",".$row['app_long'].",17z/data=!3m1!1e3".$row['app_status']; ?>" target="_blank" class="btn btn-sm btn-info" id="approve">Lokasi</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="unggah('<?php echo $row['idm_application'];?>','Unggah')">Unggah</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" onclick="updateStatus('<?php echo $row['idm_application'];?>','Disetujui')">Setujui</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" onclick="updateStatus('<?php echo $row['idm_application'];?>','Diterima')">Diterima</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-success" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditunda')">Tunda</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditolak')">Tolak</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-warning" onclick="updateStatus('<?php echo $row['idm_application'];?>','Batal')">Batal</a>
+                    <a style="cursor : pointer;" type="button" href="<?php echo "http://www.google.com/maps/place/".$row['app_lat'].",".$row['app_long']."/@".$row['app_lat'].",".$row['app_long'].",17z/data=!3m1!1e3".$row['app_status']; ?>" target="_blank" class="btn btn-sm btn-info">Lokasi</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" onclick="unggah('<?php echo $row['idm_application'];?>','Unggah')">Unggah</a>
                     <?php if ($row['app_status'] == 'Disetujui') {
                     ?> 
-                      <a style="cursor : pointer; color: #fff;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="cetak('<?php echo md5($row['idm_application']);?>')">Print</a>
+                      <a style="cursor : pointer; color: #fff;" type="button" class="btn btn-sm btn-primary" onclick="cetak('<?php echo md5($row['idm_application']);?>')">Print</a>
                     <?php }?>
                   <?php } elseif ($_SESSION['role_id'] == 2) { ?>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Diterima')">Diterima</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-success" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditunda')">Tunda</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditolak')">Tolak</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-warning" id="approve" onclick="updateStatus('<?php echo $row['idm_application'];?>','Batal')">Batal</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" onclick="updateStatus('<?php echo $row['idm_application'];?>','Diterima')">Diterima</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-success" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditunda')">Tunda</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-danger" onclick="updateStatus('<?php echo $row['idm_application'];?>','Ditolak')">Tolak</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-warning" onclick="updateStatus('<?php echo $row['idm_application'];?>','Batal')">Batal</a>
                   <?php } elseif ($_SESSION['role_id'] == 3) {?>
                     <a style="cursor : pointer;" type="button" href="<?php echo "http://www.google.com/maps/place/".$row['app_lat'].",".$row['app_long']."/@".$row['app_lat'].",".$row['app_long'].",17z/data=!3m1!1e3".$row['app_status']; ?>" target="_blank" class="btn btn-sm btn-info" id="approve">Lokasi</a>
-                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" id="approve" onclick="unggah('<?php echo $row['idm_application'];?>','Unggah')">Unggah</a>
+                    <a style="cursor : pointer;" type="button" class="btn btn-sm btn-primary" onclick="unggah('<?php echo $row['idm_application'];?>','Unggah')">Unggah</a>
                   <?php }
+                  }
                   ?>
                   </td>
                 </tr>

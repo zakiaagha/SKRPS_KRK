@@ -3,20 +3,26 @@ session_start();
   include_once ("../../include/application.inc.php");
   include_once ("../../include/config.php");
   require_once ("../../plugins/PHPExcel/PHPExcel.php");
-  /*$config = new Config();
+  $config = new Config();
   $db = $config->getConnection();
   
-  $status = $_POST['type'];
-  $period = $_POST['period'];
+  if ($_POST['type'] == '') {
+    $status = 'all';
+  } else {
+    $status = $_POST['type'];
+  }
+
+  $filter = $_GET['period'];
+  $period = explode('s/d', $filter);
 
   if(empty($period)){
-    $start = date('d/m/Y');
-    $end = date('d/m/Y');
+    $start = date('d M Y');
+    $end = date('d M Y');
     $period[0] = date('y-m-d');
     $period[1] = date('y-m-d');
   } else {
-    $start = date('d/m/Y', strtotime($period[0]));
-    $end = date('d/m/Y', strtotime($period[1]));
+    $start = date('d M Y', strtotime($period[0]));
+    $end = date('d M Y', strtotime($period[1]));
   }
 
 
@@ -36,7 +42,7 @@ session_start();
     $stmt->execute();
   } catch (Exception $e) {
     echo $e->getMessage();
-  }*/
+  }
 
 $excel = new PHPExcel();
 
@@ -100,31 +106,122 @@ $excel->getActiveSheet()->getStyle('A4')->getFont()->setSize(13);
 $excel->getActiveSheet()->getStyle('A4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
 // Buat header tabel nya pada baris ke 3
-$excel->setActiveSheetIndex(0)->setCellValue('A6', "No");
+$excel->setActiveSheetIndex(0)->setCellValue('A6', 'No');
+$excel->getActiveSheet()->mergeCells('A6:A7');
 $excel->setActiveSheetIndex(0)->setCellValue('B6', "Nama Pemohon"); 
+$excel->getActiveSheet()->mergeCells('B6:B7');
 $excel->setActiveSheetIndex(0)->setCellValue('C6', "Alamat"); 
+$excel->getActiveSheet()->mergeCells('C6:C7');
 $excel->setActiveSheetIndex(0)->setCellValue('D6', "Lokasi");  
 $excel->getActiveSheet()->mergeCells('D6:G6');
 $excel->setActiveSheetIndex(0)->setCellValue('H6', "No Sertifikat");
+$excel->getActiveSheet()->mergeCells('H6:H7');
 $excel->setActiveSheetIndex(0)->setCellValue('I6', "Ket"); 
+$excel->getActiveSheet()->mergeCells('I6:I7');
+// Buat header tabel nya pada baris ke 3
+$excel->setActiveSheetIndex(0)->setCellValue('D7', 'Pemilik Tanah');
+$excel->setActiveSheetIndex(0)->setCellValue('E7', "Alamat Lokasi"); 
+$excel->setActiveSheetIndex(0)->setCellValue('F7', "No. PL"); 
+$excel->setActiveSheetIndex(0)->setCellValue('G7', "No. Sertifikat");
 
 // Apply style header yang telah kita buat tadi ke masing-masing kolom header
-$excel->getActiveSheet()->getStyle('A6')->applyFromArray($style_col);
-$excel->getActiveSheet()->getStyle('B6')->applyFromArray($style_col);
-$excel->getActiveSheet()->getStyle('C6')->applyFromArray($style_col);
+$excel->getActiveSheet()->getStyle('A6:A7')->applyFromArray($style_col);
+$excel->getActiveSheet()->getStyle('B6:B7')->applyFromArray($style_col);
+$excel->getActiveSheet()->getStyle('C6:C7')->applyFromArray($style_col);
+
 $excel->getActiveSheet()->getStyle('D6')->applyFromArray($style_col);
 $excel->getActiveSheet()->getStyle('E6')->applyFromArray($style_col);
 $excel->getActiveSheet()->getStyle('F6')->applyFromArray($style_col);
 $excel->getActiveSheet()->getStyle('G6')->applyFromArray($style_col);
-$excel->getActiveSheet()->getStyle('H6')->applyFromArray($style_col);
-$excel->getActiveSheet()->getStyle('I6')->applyFromArray($style_col);
+$excel->getActiveSheet()->getStyle('D7')->applyFromArray($style_col);
+$excel->getActiveSheet()->getStyle('E7')->applyFromArray($style_col);
+$excel->getActiveSheet()->getStyle('F7')->applyFromArray($style_col);
+$excel->getActiveSheet()->getStyle('G7')->applyFromArray($style_col);
+
+$excel->getActiveSheet()->getStyle('H6:H7')->applyFromArray($style_col);
+$excel->getActiveSheet()->getStyle('I6:I7')->applyFromArray($style_col);
 
 // Set height baris ke 1, 2 dan 3
 $excel->getActiveSheet()->getRowDimension('1')->setRowHeight(15);
 $excel->getActiveSheet()->getRowDimension('2')->setRowHeight(15);
 $excel->getActiveSheet()->getRowDimension('3')->setRowHeight(15);
 $excel->getActiveSheet()->getRowDimension('6')->setRowHeight(15);
+try{
+$no;
+$numrow = 8;
+while($row=$stmt->fetch()){    
+    $no++;
+    $date = date('d/m/Y', strtotime($row['app_date']));
+    $pmonth = GetRomawiFromNumber(date('m', strtotime($row['app_date'])));
+    $pyear = date('Y', strtotime($row['app_date']));
+    $month = GetRomawiFromNumber(date('m', strtotime($row['app_end_date'])));
+    $year = date('Y', strtotime($row['app_end_date']));
 
+      $excel->setActiveSheetIndex(0)->setCellValue('A'.$numrow, $no);
+      $excel->getActiveSheet()->getStyle('A'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+      $excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow, $row['app_name'].PHP_EOL.$date.PHP_EOL.str_pad($row['idm_application'], 3, '0', STR_PAD_LEFT)."/PKRK/CKTR/".$pmonth."/".$pyear);
+      $excel->getActiveSheet()->getStyle('B'.$numrow)->getAlignment()->setWrapText(true);
+      $excel->getActiveSheet()->getStyle('B'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+
+      $excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow, $row['app_address']);
+      $excel->getActiveSheet()->getStyle('C'.$numrow)->getAlignment()->setWrapText(true);
+      $excel->getActiveSheet()->getStyle('C'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+
+      $excel->getActiveSheet()->setCellValueExplicit('D'.$numrow, $row['app_owner_name'],  PHPExcel_Cell_DataType::TYPE_STRING);
+      $excel->getActiveSheet()->getStyle('D'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+        
+      // Khusus untuk no telepon. kita set type kolom nya jadi STRING
+      $excel->setActiveSheetIndex(0)->setCellValueExplicit('E'.$numrow, $row['app_owner_address']);
+      $excel->getActiveSheet()->getStyle('E'.$numrow)->getAlignment()->setWrapText(true);
+      $excel->getActiveSheet()->getStyle('E'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+        
+      $excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, $row['app_pl_no']);
+      $excel->getActiveSheet()->getStyle('F'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+      $excel->setActiveSheetIndex(0)->setCellValue('G'.$numrow, $row['app_certificate_no']);
+      $excel->getActiveSheet()->getStyle('G'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+      if ($row['app_no'] == 0) {
+        $excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow, '');
+      } else {
+        $excel->setActiveSheetIndex(0)->setCellValue('H'.$numrow, str_pad($row['app_no'], 3, '0', STR_PAD_LEFT)."/KRK/CKTR/".$month."/".$year);
+      }
+      
+      $excel->getActiveSheet()->getStyle('H'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+      $excel->setActiveSheetIndex(0)->setCellValue('I'.$numrow, $row['app_comment']);
+      $excel->getActiveSheet()->getStyle('I'.$numrow)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+      $excel->getActiveSheet()->getStyle('I'.$numrow)->getAlignment()->setWrapText(true);
+        
+      // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
+      $excel->getActiveSheet()->getStyle('A'.$numrow)->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('B'.$numrow)->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('C'.$numrow)->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('D'.$numrow)->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('E'.$numrow)->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('F'.$numrow)->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('G'.$numrow)->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('H'.$numrow)->applyFromArray($style_row);
+      $excel->getActiveSheet()->getStyle('I'.$numrow)->applyFromArray($style_row);
+        
+      $excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(-1);
+        
+      $numrow++; // Tambah 1 setiap kali looping
+  }
+  // Set width kolom
+  $excel->getActiveSheet()->getColumnDimension('A')->setWidth(5); // Set width kolom A
+  $excel->getActiveSheet()->getColumnDimension('B')->setWidth(25); // Set width kolom B
+  $excel->getActiveSheet()->getColumnDimension('C')->setWidth(25); // Set width kolom C
+  $excel->getActiveSheet()->getColumnDimension('D')->setWidth(25); // Set width kolom D
+  $excel->getActiveSheet()->getColumnDimension('E')->setWidth(25); // Set width kolom E
+  $excel->getActiveSheet()->getColumnDimension('F')->setWidth(25); // Set width kolom F
+  $excel->getActiveSheet()->getColumnDimension('G')->setWidth(25); // Set width kolom F
+  $excel->getActiveSheet()->getColumnDimension('H')->setWidth(25); // Set width kolom F
+  $excel->getActiveSheet()->getColumnDimension('I')->setWidth(25); // Set width kolom F
+} catch (Exception $e) {
+  echo $e->getMessage();
+}
 
 $objWriter = PHPExcel_IOFactory::createWriter($excel, "Excel2007");
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
