@@ -55,7 +55,7 @@ class Application{
 	}
 
 	function insert(){
-		$query = "insert into ".$this->table_name." (app_name, app_nik, app_address, app_telepon, app_owner_name, app_owner_address, app_land_area, app_proposed_land_area, app_certificate_no, app_pl_no, app_allotment_perpres, app_allotment_prov, app_building_allotment, app_imb_no, app_date, app_lat, app_long, app_cr_uid, app_cr_dt, app_comment, app_req_no) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		$query = "insert into ".$this->table_name." (app_name, app_nik, app_address, app_telepon, app_owner_name, app_owner_address, app_land_area, app_proposed_land_area, app_certificate_no, app_pl_no, app_allotment_perpres, app_allotment_prov, app_building_allotment, app_imb_no, app_date, app_lat, app_long, app_cr_uid, app_cr_dt, app_comment, app_req_no, app_status) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(1, $this->app_name);
 		$stmt->bindParam(2, $this->app_nik);
@@ -78,6 +78,7 @@ class Application{
 		$stmt->bindParam(19, $this->datenow);
 		$stmt->bindParam(20, $this->app_comment);
 		$stmt->bindParam(21, $this->app_req_no);
+		$stmt->bindParam(22, $this->app_status);
 		
 		if($stmt->execute()){
 			$this->app_id = $this->conn->lastInsertId();

@@ -94,7 +94,7 @@ class User{
 		$stmt->bindParam(10, $this->id);
 
 		if($stmt->execute()){
-        	$this->updateRole();
+        	/*$this->updateRole();*/
 			return true;
 		}else{
 			return false;

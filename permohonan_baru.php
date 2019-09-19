@@ -46,6 +46,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 	$app->uid=$_POST['app_name'];
 	$app->datenow=date("Y-m-d H:i:s");
 	$app->app_comment='Permohonan berhasil, waktu proses pengecekan berkas 3-5 hari kerja';
+	$app->app_status='Diproses';
 
 	try{
 		$db->beginTransaction();

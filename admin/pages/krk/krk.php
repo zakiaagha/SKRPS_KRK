@@ -140,7 +140,7 @@
                 <input type="hidden" id="mode" name="mode">
                 <input type="hidden" id="app_id" name="app_id">
                 <input type="hidden" id="type" name="type">
-                <textarea type="text" class="form-control" id="app_komentar" name="app_komentar" rows="5" autocomplete="off" required></textarea>   
+                <textarea type="text" class="form-control" id="app_komentar" name="app_komentar" rows="5" autocomplete="off"></textarea>   
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" style="width:90px;">Simpan</button>
