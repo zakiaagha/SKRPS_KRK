@@ -73,7 +73,7 @@
                     ?>
                   </td>
                   <td><?php echo $row['app_date']; ?></td>
-                  <td><?php echo $row['app_name']; ?></td>
+                  <td><?php echo strtoupper($row['app_name']); ?></td>
                   <td><?php echo $row['app_owner_address']; ?></td>
                   <td><?php echo $row['app_land_area']; ?></td>
                   <td><b><?php echo $row['app_status']; ?></b></td>

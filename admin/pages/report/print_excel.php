@@ -16,13 +16,13 @@ session_start();
   $period = explode('s/d', $filter);
 
   if(empty($period)){
-    $start = date('d M Y');
-    $end = date('d M Y');
+    $start = date('d F Y');
+    $end = date('d F Y');
     $period[0] = date('y-m-d');
     $period[1] = date('y-m-d');
   } else {
-    $start = date('d M Y', strtotime($period[0]));
-    $end = date('d M Y', strtotime($period[1]));
+    $start = date('d F Y', strtotime($period[0]));
+    $end = date('d F Y', strtotime($period[1]));
   }
 
 
@@ -82,18 +82,18 @@ $style_row = array(
   )
 );
 
-$excel->setActiveSheetIndex(0)->setCellValue('A1', 'Laporan'); 
+$excel->setActiveSheetIndex(0)->setCellValue('A1', 'LAPORAN'); 
 $excel->getActiveSheet()->mergeCells('A1:I1'); // Set Merge Cell pada kolom A1 sampai F1
 $excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 $excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(13); // Set font size 15 untuk kolom A1
 $excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
-$excel->setActiveSheetIndex(0)->setCellValue('A2', 'Data Permohonan Izin'); 
+$excel->setActiveSheetIndex(0)->setCellValue('A2', "KETERANGAN RENCANA KOTA (KRK)"); 
 $excel->getActiveSheet()->mergeCells('A2:I2');
 $excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); 
 $excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(13); 
 $excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
-$excel->setActiveSheetIndex(0)->setCellValue('A3', "Keterangan Rencana Kota (KRK)"); 
+$excel->setActiveSheetIndex(0)->setCellValue('A3', 'DINAS CIPTA KARYA DAN TATA RUANG KOTA BATAM'); 
 $excel->getActiveSheet()->mergeCells('A3:I3');
 $excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(TRUE); 
 $excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(13); 
@@ -209,6 +209,27 @@ while($row=$stmt->fetch()){
         
       $numrow++; // Tambah 1 setiap kali looping
   }
+
+  $no = $numrow+2;
+  $excel->setActiveSheetIndex(0)->setCellValue('H'.$no, 'Batam, '.date('d F Y')); 
+  $excel->getActiveSheet()->getStyle('H'.$no)->getFont()->setBold(TRUE); 
+  $excel->getActiveSheet()->getStyle('H'.$no)->getFont()->setSize(11); // Set font size 15 untuk kolom A1
+  $no = $no+1;
+  $excel->setActiveSheetIndex(0)->setCellValue('H'.$no, 'KEPALA BIDANG TATA RUANG'); 
+  $excel->getActiveSheet()->getStyle('H'.$no)->getFont()->setBold(TRUE); 
+  $excel->getActiveSheet()->getStyle('H'.$no)->getFont()->setSize(11); // Set font size 15 untuk kolom A1
+  $no = $no+4;
+  $excel->setActiveSheetIndex(0)->setCellValue('H'.$no, 'SUHAR, ST'); 
+  $excel->getActiveSheet()->getStyle('H'.$no)->getFont()->setBold(TRUE); 
+  $excel->getActiveSheet()->getStyle('H'.$no)->getFont()->setUnderline(true);
+  $excel->getActiveSheet()->getStyle('H'.$no)->getFont()->setSize(11); // Set font size 15 untuk kolom A1
+  $no = $no+1;
+  $excel->setActiveSheetIndex(0)->setCellValue('H'.$no, 'NIP. 19740316 200003 1 003'); 
+  $excel->getActiveSheet()->getStyle('H'.$no)->getFont()->setBold(TRUE); 
+  $excel->getActiveSheet()->getStyle('H'.$no)->getFont()->setSize(11); // Set font size 15 untuk kolom A1
+
+
+
   // Set width kolom
   $excel->getActiveSheet()->getColumnDimension('A')->setWidth(5); // Set width kolom A
   $excel->getActiveSheet()->getColumnDimension('B')->setWidth(25); // Set width kolom B

@@ -115,17 +115,17 @@
               <table style="border: none !important;">
                 <tr align="center">
                   <td colspan="6">
-                     <center><font style="font-size: 18px;">Laporan</font></center>
+                     <center><font style="font-size: 18px;">LAPORAN</font></center>
                   </td>
                 </tr>    
                 <tr align="center">
                   <td colspan="6">
-                     <center><font style="font-size: 18px;">Data Permohonan Izin</font></center>
+                     <center><font style="font-size: 18px;">KETERANGAN RENCANA KOTA (KRK)</font></center>
                   </td>
                 </tr> 
                 <tr align="center">
                   <td colspan="6">
-                     <center><span><font style="font-size: 18px;">Keterangan Rencana Kota (KRK)
+                     <center><span><font style="font-size: 18px;">DINAS CIPTA KARYA DAN TATA RUANG KOTA BATAM
                     </font></span></center>
                   </td>
                 </tr>   

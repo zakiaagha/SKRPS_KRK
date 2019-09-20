@@ -102,7 +102,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
     	<?php } ?><br>
         <div class="row">
 		  <div class="col-xs-12 col-sm-7 col-md-7">	
-          <form action="index.php?hal=permohonan_baru" method="post" enctype="multipart/form-data">	
+          <form action="index.php?hal=permohonan_baru" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">	
 			<div class="form-group">
 				<label for="jm">Nama Pemohon</label>	
 				<?php			    
@@ -291,6 +291,17 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
   <script>
       // This example requires the Places library. Include the libraries=places
       // parameter when you first load the API. For example:
+        function validateForm()
+        {
+             var confirmResp = confirm("Pastikan data permohonan anda sudah benar. Klik OK untuk melanjutkan");
+             if(confirmResp)
+             {
+                 return true;
+             }
+             else {
+                 return false;
+             }
+        }
 
       function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {

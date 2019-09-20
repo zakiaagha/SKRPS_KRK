@@ -51,22 +51,51 @@ $stmt2=$app->readImage();
                       <tr>
                         <td style="border: none;" width="15%">Nama Pemohon</td>
                         <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo strtoupper($app->app_name)?></td>
+                        <td style="border: none;">
+                            <?php 
+                          if ($_SESSION['role_id'] == 1) {
+                            echo "<input type='text' class='form-control' id='app_name' name='app_name' autocomplete='off' value='".strtoupper($app->app_name)."' required>";
+                          } else {                          
+                            echo strtoupper($app->app_name);
+                          }?>                            
+                          </td>
                       </tr>  
                       <tr>
                         <td style="border: none;" width="15%">Alamat</td>
                         <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $app->app_address?></td>
+                        <td style="border: none;">
+                            <?php 
+                          if ($_SESSION['role_id'] == 1) {
+                            echo "<input type='text' class='form-control' id='app_address' name='app_address' autocomplete='off' value='".$app->app_address."' required>";
+                          } else {                          
+                            echo $app->app_address;
+                          }?>
+                          </td>
                       </tr>  
                       <tr>
                         <td style="border: none;" width="15%">Atas Nama/Pemilik Tanah</td>
                         <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $app->app_owner_name?></td>
+                        <td style="border: none;">
+                            <?php 
+                          if ($_SESSION['role_id'] == 1) {
+                            echo "<input type='text' class='form-control' id='app_owner_name' name='app_owner_name' autocomplete='off' value='".$app->app_owner_name."' required>";
+                          } else {                          
+                            echo $app->app_owner_name;
+                          }?>
+                          </td>
                       </tr>  
                       <tr>
                         <td style="border: none;" width="15%">Alamat Lokasi</td>
                         <td style="border: none;">:</td>
-                        <td style="border: none;"><?php echo $app->app_owner_address?></td>
+                        <td style="border: none;">
+                          <?php 
+                          if ($_SESSION['role_id'] == 1) {
+                            echo "<input type='text' class='form-control' id='app_owner_address' name='app_owner_address' autocomplete='off' value='".$app->app_owner_address."' required>";
+                          } else {                          
+                            echo $app->app_owner_address;
+                          }?>
+                            
+                          </td>
                       </tr>  
                       <tr>
                         <td style="border: none;" width="15%">No. Sertifikat</td>
@@ -430,6 +459,7 @@ $stmt2=$app->readImage();
             },'json');
           });
       });
+
   function lihatPDF(name){
       var name = name;
       $('#pdf').modal('show');

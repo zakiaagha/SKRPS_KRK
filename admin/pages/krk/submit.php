@@ -63,6 +63,12 @@ if ($mode == 'status') {
 	echo json_encode($data);
 } elseif ($mode == 'update') {
 	$app->app_id=$app_id;
+
+	$app->app_name=$_POST['app_name'];
+	$app->app_address=$_POST['app_address'];
+	$app->app_owner_name=$_POST['app_owner_name'];
+	$app->app_owner_address=$_POST['app_owner_address'];
+
 	$app->app_certificate_no=$_POST['app_certificate_no'];
 	$app->app_pl_no=$_POST['app_pl_no'];
 	$app->app_imb_no=$_POST['app_imb_no'];

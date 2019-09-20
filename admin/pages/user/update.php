@@ -55,7 +55,7 @@ $user->readOne();
                 <div class="form-group">
                   <label for="exampleInputPassword1">Password</label>
                   <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Password" value="<?php echo $user->user_password;?>" required>
-                </div>
+                </div><!-- 
                 <div class="form-group">
                   <label>Role</label>
                   <select class="form-control" id="user_role" name="user_role">
@@ -63,7 +63,7 @@ $user->readOne();
                     <option value="2">Operator</option>
                     <option value="3">surveyor</option>
                   </select>
-                </div>
+                </div> -->
                 </div>
               </div>
 
